@@ -169,6 +169,7 @@ chore: CLAUDE.md git 관리 지침 추가
 - 소소한 수정은 `dev`에 직접 커밋
 - 한 세션에서 큰 기능을 만들 때는 `feat/기능명` 브랜치를 따서 작업 후 `dev`로 머지
 - `main` 머지는 사용자가 "배포 가능 수준"이라고 판단할 때만, 반드시 버전 태그 붙이기
+- 작업 브랜치는 dev 머지 후 로컬 삭제 (`git branch -d`). remote push 한 경우 remote도 삭제 (`git push origin --delete <branch>`)
 
 ### 릴리즈 태그
 - Semantic Versioning: `v주.부.수`
