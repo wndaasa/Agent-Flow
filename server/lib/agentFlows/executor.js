@@ -289,11 +289,19 @@ class FlowExecutor {
   async executeGraphFlow(flow, initialVariables = {}) {
     const { nodes, edges } = flow.config;
 
+    // 노드 타입별 기본 레이블 (프론트 NODE_INFO.label과 동일하게 유지)
+    const DEFAULT_NODE_LABELS = {
+      userInput: "User Input",
+      llmInstruction: "LLM Instruction",
+      setVariable: "Set Variable",
+      code: "Code",
+    };
+
     // @블록명 참조를 위한 레이블 → 변수명 매핑 구성
     this._labelToVar = {};
     for (const node of nodes) {
       if (["start", "finish", "output"].includes(node.type)) continue;
-      const label = node.data?.title?.trim();
+      const label = node.data?.title?.trim() || DEFAULT_NODE_LABELS[node.type] || node.type;
       if (!label) continue;
       if (node.type === "userInput") {
         this._labelToVar[label] = autoVarName(node.id);
