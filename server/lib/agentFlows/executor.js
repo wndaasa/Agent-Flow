@@ -221,9 +221,8 @@ class FlowExecutor {
     } else if (type === FLOW_TYPES.CODE.type) {
       const varName = config.resultVariable || autoCodeVarName(step.id);
       this.variables[varName] = result;
-    } else if (config.resultVariable || config.responseVariable) {
-      const varName = config.resultVariable || config.responseVariable;
-      this.variables[varName] = result;
+    } else if (config.resultVariable) {
+      this.variables[config.resultVariable] = result;
     }
 
     if (config.directOutput) result = { directOutput: true, result };
