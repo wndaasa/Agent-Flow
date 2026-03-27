@@ -33,19 +33,34 @@ export default function NewButton() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border border-white/10 text-[var(--theme-text-primary)] bg-white/5 hover:bg-white/10 transition-colors"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+        style={{
+          background: "rgba(255,255,255,0.12)",
+          border: "1px solid rgba(255,255,255,0.28)",
+          color: "#f1f1f1",
+        }}
       >
         + New
         <span
-          className="text-[10px] text-[var(--theme-text-secondary)] transition-transform duration-150 inline-block"
-          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+          className="text-[10px] transition-transform duration-150 inline-block"
+          style={{
+            color: "#888",
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+          }}
         >
           ▾
         </span>
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1.5 w-44 bg-[var(--theme-bg-secondary)] border border-white/10 rounded-xl shadow-2xl shadow-black/40 overflow-hidden z-50 py-1">
+        <div
+          className="absolute right-0 top-full mt-1.5 w-44 rounded-xl overflow-hidden z-50 py-1"
+          style={{
+            background: "#1a1c1f",
+            border: "1px solid rgba(255,255,255,0.1)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+          }}
+        >
           {MENU_ITEMS.map(({ id, label, available, action }) =>
             available ? (
               <button
@@ -54,17 +69,21 @@ export default function NewButton() {
                   action(navigate);
                   setOpen(false);
                 }}
-                className="flex items-center w-full px-4 py-2.5 text-sm text-[var(--theme-text-primary)] hover:bg-white/5 transition-colors"
+                className="flex items-center w-full px-4 py-2.5 text-sm transition-colors"
+                style={{ color: "#f1f1f1" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
                 {label}
               </button>
             ) : (
               <div
                 key={id}
-                className="flex items-center justify-between w-full px-4 py-2.5 text-sm text-[var(--theme-text-secondary)] opacity-35 cursor-not-allowed"
+                className="flex items-center justify-between w-full px-4 py-2.5 text-sm cursor-not-allowed"
+                style={{ color: "#555" }}
               >
                 <span>{label}</span>
-                <span className="text-[9px] text-white/25">Soon</span>
+                <span className="text-[9px]" style={{ color: "#444" }}>Soon</span>
               </div>
             )
           )}
