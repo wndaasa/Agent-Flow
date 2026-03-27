@@ -6,6 +6,7 @@ const multer = require("multer");
 const { AgentFlows } = require("../lib/agentFlows");
 const { StreamFlowExecutor } = require("../lib/agentFlows/streamExecutor");
 const { MinimalAibitat } = require("../lib/minimalAibitat");
+const { MAX_FILE_SIZE, SESSION_CLEANUP_TIMEOUT } = require("../lib/agentFlows/constants");
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -15,7 +16,7 @@ const upload = multer({
       cb(null, `${uuidv4()}_${safe}`);
     },
   }),
-  limits: { fileSize: 25 * 1024 * 1024 },
+  limits: { fileSize: MAX_FILE_SIZE },
 });
 
 const sessions = new Map();
@@ -77,7 +78,7 @@ async function runFlowInBackground(session, flow) {
     session.status = "error";
     emitToSession(session, { type: "flow_error", error: error.message });
   } finally {
-    setTimeout(() => sessions.delete(session.sessionId), 5 * 60 * 1000);
+    setTimeout(() => sessions.delete(session.sessionId), SESSION_CLEANUP_TIMEOUT);
   }
 }
 

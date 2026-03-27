@@ -1,6 +1,5 @@
 import React from "react";
-import HighlightTextarea from "../HighlightTextarea";
-import MentionDropdown from "../MentionDropdown";
+import MentionTextarea from "../components/MentionTextarea";
 import { useFlowContext } from "../FlowContext";
 import { useLocalField } from "../hooks/useLocalField";
 import { useAtMention } from "../hooks/useAtMention";
@@ -39,7 +38,7 @@ export default function CodePanel({ id, data = {} }) {
     <div className="space-y-5">
       {/* 노드 이름 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           이름
         </label>
         <input
@@ -48,49 +47,32 @@ export default function CodePanel({ id, data = {} }) {
           placeholder="노드 이름 (선택)"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* 코드 입력 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           JavaScript 코드
         </label>
         <p className="text-[10px] text-theme-text-secondary/60 mb-2 leading-relaxed">
           <code>variables</code> 객체로 플로우 변수를 읽고 쓸 수 있습니다.
           <code>return</code> 값이 결과로 저장됩니다.
         </p>
-        <div className="relative">
-          <HighlightTextarea
-            value={codeField.value}
-            mentions={availableMentions}
-            wrapperClassName="bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg"
-            className="w-full text-sm text-theme-text-primary placeholder:text-theme-text-secondary/40 px-3 py-2 outline-none border-none focus:ring-1 focus:ring-primary-button/50 resize-none font-mono"
-            rows={10}
-            placeholder={"// 예시: NIA 문서 분리\nconst text = variables.양식텍스트;\nconst parts = text.split(/\\[붙임 \\d+\\]/);\nreturn { 수행계획서: parts[0], 구축계획서: parts[1], 품질관리: parts[2] };"}
-            spellCheck={false}
-            onChange={(e) => {
-              codeField.onChange(e);
-              codeMention.onTextareaChange(e);
-            }}
-            onKeyDown={codeMention.onTextareaKeyDown}
-            onKeyUp={codeMention.onTextareaKeyUp}
-            onBlur={() => setTimeout(codeMention.closeMention, 150)}
-            onCompositionStart={codeField.onCompositionStart}
-            onCompositionEnd={codeField.onCompositionEnd}
-          />
-          <MentionDropdown
-            items={codeMention.filtered}
-            selectedIndex={codeMention.selectedIndex}
-            onSelect={codeMention.selectMention}
-          />
-        </div>
+        <MentionTextarea
+          field={codeField}
+          mention={codeMention}
+          mentions={availableMentions}
+          placeholder={"// 예시: NIA 문서 분리\nconst text = variables.양식텍스트;\nconst parts = text.split(/\\[붙임 \\d+\\]/);\nreturn { 수행계획서: parts[0], 구축계획서: parts[1], 품질관리: parts[2] };"}
+          rows={10}
+          textareaClassName="font-mono"
+        />
       </div>
 
       {/* 결과 저장 변수명 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           결과 저장 변수명{" "}
           <span className="normal-case opacity-60 font-normal">(선택)</span>
         </label>
@@ -100,13 +82,13 @@ export default function CodePanel({ id, data = {} }) {
           placeholder="미지정 시 자동 생성 (code_xxxxxxxx)"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* 출력 속성 키 (JSON 반환 시 @블록명.속성 자동완성용) */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           출력 속성 키{" "}
           <span className="normal-case opacity-60 font-normal">(JSON 반환 시)</span>
         </label>
@@ -126,7 +108,7 @@ export default function CodePanel({ id, data = {} }) {
           placeholder="예: 수행계획서, 구축계획서, 품질관리계획서"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
     </div>

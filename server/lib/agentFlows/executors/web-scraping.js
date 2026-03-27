@@ -1,3 +1,5 @@
+const { MAX_SCRAPED_TEXT_LENGTH } = require("../constants");
+
 /**
  * Collector 없이 fetch로 HTML/텍스트만 가져옵니다 (포폴용 단순화).
  */
@@ -42,7 +44,7 @@ async function executeWebScraping(config, context) {
     .trim();
 
   introspect(`Extracted text (${stripped.length} chars)`);
-  return stripped.slice(0, 500_000);
+  return stripped.slice(0, MAX_SCRAPED_TEXT_LENGTH);
 }
 
 module.exports = executeWebScraping;

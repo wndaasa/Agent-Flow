@@ -1,16 +1,5 @@
 const { FLOW_TYPES } = require("./flowTypes");
-
-/** userInput 노드 ID 기반 자동 변수명 */
-function autoVarName(nodeId) {
-  const tail = (nodeId || "input").split("_").pop();
-  return `input_${tail.slice(-8)}`;
-}
-
-/** llmInstruction 노드 ID 기반 자동 변수명 */
-function autoLlmVarName(nodeId) {
-  const tail = (nodeId || "llm").split("_").pop();
-  return `llm_${tail.slice(-8)}`;
-}
+const { autoVarName, autoLlmVarName, autoCodeVarName } = require("./autoVarNames");
 
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -230,11 +219,10 @@ class FlowExecutor {
       const varName = config.resultVariable || autoLlmVarName(step.id);
       this.variables[varName] = result;
     } else if (type === FLOW_TYPES.CODE.type) {
-      const varName = config.resultVariable || `code_${(step.id || "").split("_").pop().slice(-8)}`;
+      const varName = config.resultVariable || autoCodeVarName(step.id);
       this.variables[varName] = result;
-    } else if (config.resultVariable || config.responseVariable) {
-      const varName = config.resultVariable || config.responseVariable;
-      this.variables[varName] = result;
+    } else if (config.resultVariable) {
+      this.variables[config.resultVariable] = result;
     }
 
     if (config.directOutput) result = { directOutput: true, result };
@@ -314,7 +302,7 @@ class FlowExecutor {
           node.data?.resultVariable || autoLlmVarName(node.id);
       } else if (node.type === "code") {
         this._labelToVar[label] =
-          node.data?.resultVariable || `code_${(node.id || "").split("_").pop().slice(-8)}`;
+          node.data?.resultVariable || autoCodeVarName(node.id);
       } else if (node.data?.variableName) {
         this._labelToVar[label] = node.data.variableName;
       }

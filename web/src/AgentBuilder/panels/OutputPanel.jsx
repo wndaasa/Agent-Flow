@@ -1,6 +1,5 @@
 import React from "react";
-import HighlightTextarea from "../HighlightTextarea";
-import MentionDropdown from "../MentionDropdown";
+import MentionTextarea from "../components/MentionTextarea";
 import { useFlowContext } from "../FlowContext";
 import { useLocalField } from "../hooks/useLocalField";
 import { useAtMention } from "../hooks/useAtMention";
@@ -40,34 +39,16 @@ export default function OutputPanel({ id, data = {} }) {
 
       {/* 출력 템플릿 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           출력 템플릿
         </label>
-        <div className="relative">
-          <HighlightTextarea
-            value={templateField.value}
-            mentions={availableMentions}
-            wrapperClassName="bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg"
-            className="w-full text-sm text-theme-text-primary placeholder:text-theme-text-secondary/40 px-3 py-2 outline-none border-none focus:ring-1 focus:ring-primary-button/50 resize-none"
-            rows={10}
-            placeholder={"# 제목\n\n@블록명\n\n---\n\n@다른블록명"}
-            spellCheck={false}
-            onChange={(e) => {
-              templateField.onChange(e);
-              templateMention.onTextareaChange(e);
-            }}
-            onKeyDown={templateMention.onTextareaKeyDown}
-            onKeyUp={templateMention.onTextareaKeyUp}
-            onBlur={() => setTimeout(templateMention.closeMention, 150)}
-            onCompositionStart={templateField.onCompositionStart}
-            onCompositionEnd={templateField.onCompositionEnd}
-          />
-          <MentionDropdown
-            items={templateMention.filtered}
-            selectedIndex={templateMention.selectedIndex}
-            onSelect={templateMention.selectMention}
-          />
-        </div>
+        <MentionTextarea
+          field={templateField}
+          mention={templateMention}
+          mentions={availableMentions}
+          placeholder={"# 제목\n\n@블록명\n\n---\n\n@다른블록명"}
+          rows={10}
+        />
       </div>
     </div>
   );

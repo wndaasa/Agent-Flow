@@ -58,7 +58,7 @@ const FLOW_TYPES = {
           "Request body content. If body type is json, always return a valid json object. If body type is form, always return a valid form data object.",
       },
       formData: { type: "array", description: "Form data as key-value pairs" },
-      responseVariable: {
+      resultVariable: {
         type: "string",
         description: "Variable to store the response",
       },

@@ -1,0 +1,10 @@
+# 텍스트 파일은 저장소에 LF로 통일, 체크아웃 시 OS 줄바꿈 적용
+* text=auto
+
+# 바이너리 파일은 변환 없이 그대로
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.db binary

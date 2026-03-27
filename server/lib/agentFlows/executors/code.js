@@ -1,4 +1,5 @@
 const vm = require("node:vm");
+const { CODE_EXECUTION_TIMEOUT } = require("../constants");
 
 /**
  * Code 노드 실행기
@@ -46,7 +47,7 @@ async function executeCode(config, context) {
 
   try {
     const result = await vm.runInNewContext(wrapped, vmContext, {
-      timeout: 10_000, // 10초 제한
+      timeout: CODE_EXECUTION_TIMEOUT,
       displayErrors: true,
     });
 
