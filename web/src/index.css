@@ -5,7 +5,11 @@
 @layer components {
   /* 패널 공통 input 스타일 */
   .panel-input {
-    @apply w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40;
+    @apply w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button;
+  }
+  .panel-input::placeholder {
+    color: var(--theme-text-secondary);
+    opacity: 0.4;
   }
 
   /* 패널 공통 label 스타일 */
