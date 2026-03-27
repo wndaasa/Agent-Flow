@@ -1,12 +1,14 @@
-/** Agent Flow 단독 사이트 라우트 */
+/** Agent Flow 플랫폼 라우트 */
 const paths = {
   home: () => "/",
   agents: {
     builder: () => "/builder",
     editAgent: (uuid) => `/builder/${uuid}`,
   },
-  settings: {
-    agentSkills: () => "/",
+  // 추후 Notebook 기능 추가 시 확장
+  notebooks: {
+    list: () => "/notebooks",
+    view: (uuid) => `/notebooks/${uuid}`,
   },
 };
 
