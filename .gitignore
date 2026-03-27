@@ -13,3 +13,6 @@ web/dist/
 # (server/prisma/migrations/*.sql 은 커밋)
 server/**/*.db
 server/**/*.db-journal
+
+# Claude Code — 로컬 AI 도구 설정 (프로젝트 코드 아님)
+.claude/
