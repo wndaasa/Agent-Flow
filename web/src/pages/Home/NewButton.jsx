@@ -36,15 +36,15 @@ export default function NewButton() {
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
         style={{
           background: "rgba(255,255,255,0.12)",
-          border: "1px solid rgba(255,255,255,0.28)",
-          color: "#f1f1f1",
+          border: "1px solid rgb(0, 0, 0)",
+          color: "#000000",
         }}
       >
         + New
         <span
           className="text-[10px] transition-transform duration-150 inline-block"
           style={{
-            color: "#888",
+            color: "#ffffff",
             transform: open ? "rotate(180deg)" : "rotate(0deg)",
           }}
         >

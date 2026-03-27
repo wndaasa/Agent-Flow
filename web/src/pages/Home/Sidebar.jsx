@@ -5,10 +5,10 @@ const NAV_ITEMS = [
 
 export default function Sidebar({ activeSection, onSectionChange }) {
   return (
-    <aside className="w-52 shrink-0 flex flex-col border-r border-white/8 bg-[#111214] h-full">
+    <aside className="w-52 shrink-0 flex flex-col h-full" style={{ background: "#111214", borderRight: "1px solid rgba(255,255,255,0.07)" }}>
       {/* Logo */}
-      <div className="flex items-center px-5 h-14 border-b border-white/5">
-        <span className="font-semibold text-sm text-[var(--theme-text-primary)] tracking-tight">
+      <div className="flex items-center px-5 h-14" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <span className="font-semibold text-sm tracking-tight" style={{ color: "#f1f1f1" }}>
           Agent Flow
         </span>
       </div>
@@ -22,19 +22,23 @@ export default function Sidebar({ activeSection, onSectionChange }) {
               key={id}
               onClick={() => available && onSectionChange(id)}
               disabled={!available}
-              className={`
-                flex items-center justify-between px-3 py-2 rounded-lg text-sm w-full text-left transition-colors
-                ${isActive
-                  ? "bg-white/8 text-[var(--theme-text-primary)] font-medium"
-                  : available
-                    ? "text-[var(--theme-text-secondary)] hover:bg-white/5 hover:text-[var(--theme-text-primary)]"
-                    : "text-[var(--theme-text-secondary)] opacity-35 cursor-not-allowed"
-                }
-              `}
+              className="flex items-center justify-between px-3 py-2 rounded-lg text-sm w-full text-left transition-colors"
+              style={{
+                color: isActive ? "#f1f1f1" : available ? "#888" : "#555",
+                background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                fontWeight: isActive ? 500 : 400,
+                cursor: available ? "pointer" : "not-allowed",
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive && available) e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) e.currentTarget.style.background = "transparent";
+              }}
             >
               <span>{label}</span>
               {!available && (
-                <span className="text-[9px] text-white/25 leading-none">
+                <span className="text-[9px]" style={{ color: "#444" }}>
                   Soon
                 </span>
               )}

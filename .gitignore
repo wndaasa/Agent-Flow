@@ -16,3 +16,4 @@ server/**/*.db-journal
 
 # Claude Code — 로컬 AI 도구 설정 (프로젝트 코드 아님)
 .claude/
+CLAUDE.md
