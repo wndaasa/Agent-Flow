@@ -1,0 +1,15 @@
+# agent-flow — 이 레포에서만 제외할 파일
+
+# npm 패키지 (루트 concurrently + server + web)
+node_modules/
+
+# Express — 로컬 API 키·DB URL (server/.env.example 은 커밋)
+server/.env
+
+# Vite — 프로덕션 빌드 출력
+web/dist/
+
+# Prisma SQLite — DATABASE_URL 이 가리키는 로컬 DB
+# (server/prisma/migrations/*.sql 은 커밋)
+server/**/*.db
+server/**/*.db-journal
