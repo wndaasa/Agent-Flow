@@ -1,91 +1,20 @@
 # Agent Flow
 
-노드를 캔버스에 배치해 에이전트 플로우를 설계하고, 저장·실행할 수 있는 **노코드형 에이전트 빌더**입니다. React Flow(`@xyflow/react`) 기반 에디터와 Express API, SQLite(Prisma)로 구성되어 있습니다.
+> Google [OPAL](https://developers.google.com/opal) inspired no-code agent builder — 노드를 캔버스에 연결하는 것만으로 LLM 기반 에이전트 플로우를 설계하고 실행할 수 있습니다.
 
-## 구성
+## 개요
 
-| 디렉터리 | 역할 |
-|----------|------|
-| `web/` | Vite + React 18 프론트엔드 (플로우 에디터, 앱 미리보기 UI) |
-| `server/` | Express API, Prisma, 플로우 CRUD·실행 라우트 |
+Agent Flow는 노코드 방식의 AI 에이전트 빌더입니다. Start → LLM Instruction → Code → Output 등의 블록을 드래그 앤 드롭으로 연결해 에이전트 워크플로우를 정의하고, 서버에서 실행·스트리밍합니다.
 
-루트 `package.json`은 두 패키지를 한 번에 설치·실행하도록 묶어 둡니다.
+**핵심 기술 스택**
 
-## 요구 사항
+| 레이어 | 기술 |
+|--------|------|
+| 프론트엔드 | Vite + React 18, `@xyflow/react`, Tailwind CSS |
+| 백엔드 | Express, Prisma, SQLite |
+| LLM | OpenAI / Anthropic 호환 |
 
-- **Node.js** 18+ 권장  
-- **npm** (또는 호환 패키지 매니저)
-
-## 빠른 시작
-
-### 1. 의존성 설치
-
-저장소 루트에서:
-
-```bash
-npm install
-```
-
-`postinstall`로 `server/`, `web/` 의존성이 함께 설치됩니다.
-
-### 2. 서버 환경 변수
-
-```bash
-cp server/.env.example server/.env
-```
-
-`server/.env`에서 최소한 다음을 확인합니다.
-
-- `DATABASE_URL` — SQLite 파일 경로 (기본 예시: `file:./data/agent-flow.db` 등, Prisma 설정과 일치해야 함)
-- `PORT` — API 포트 (기본 `3001`)
-- `OPEN_AI_KEY` — LLM 호출 시 필요 (로컬 개발·실행에 따라 설정)
-
-### 3. 데이터베이스 마이그레이션 (최초 1회)
-
-```bash
-npm run prisma:migrate --prefix server
-```
-
-스키마는 `server/prisma/schema.prisma`를 참고합니다.
-
-### 4. 개발 서버 실행
-
-루트에서:
-
-```bash
-npm run dev
-```
-
-- **프론트엔드**: Vite 기본 포트 **5175** (`web/vite.config.js`)
-- **API**: `http://localhost:3001` (환경 변수 `PORT`에 따름)  
-  - 헬스 체크: `GET /api/health`
-
-브라우저에서 프론트 URL로 접속해 빌더(`/builder` 등 라우트)를 사용합니다.
-
-### 개별 실행
-
-```bash
-npm run dev --prefix server
-npm run dev --prefix web
-```
-
-## 프로덕션 빌드 (프론트)
-
-```bash
-npm run build --prefix web
-npm run preview --prefix web   # 로컬에서 빌드 결과 미리보기
-```
-
-API는 별도 배포/프로세스 관리가 필요합니다.
-
-## 주요 기능 (요약)
-
-- **플로우 에디터**: Start, User Input, LLM Instruction, Code, Output 등 블록을 연결해 그래프 정의
-- **저장**: SQLite에 플로우 정의(JSON) 영속화
-- **실행**: 서버에서 플로우 실행·스트리밍 등 API 제공 (세부는 `server/routes/` 참고)
-- **LLM**: OpenAI 등 설정은 `server/.env` 및 노드의 provider/model 옵션과 연동
-
-## 프로젝트 구조 참고
+## 프로젝트 구조
 
 ```
 agent-flow/
@@ -93,15 +22,85 @@ agent-flow/
 ├── server/
 │   ├── index.js          # Express 진입점
 │   ├── prisma/           # Prisma 스키마·마이그레이션
-│   ├── routes/           # REST 라우트
-│   └── lib/              # 플로우 실행·도메인 로직
+│   ├── routes/           # REST 라우트 (CRUD, 플로우 실행)
+│   └── lib/
+│       └── agentFlows/   # 플로우 실행 엔진, LLM 어댑터
 └── web/
     ├── vite.config.js
     └── src/
-        ├── AgentBuilder/ # 플로우 빌더 UI
-        └── ...
+        └── AgentBuilder/ # 플로우 빌더 UI (노드, 패널, 툴바)
+```
+
+## 빠른 시작
+
+### 1. 의존성 설치
+
+```bash
+npm install
+```
+
+루트의 `postinstall`로 `server/`, `web/` 의존성이 함께 설치됩니다.
+
+### 2. 환경 변수 설정
+
+```bash
+cp server/.env.example server/.env
+```
+
+`server/.env` 에서 필수 항목을 입력합니다.
+
+```env
+DATABASE_URL="file:./data/agent-flow.db"
+PORT=3001
+LLM_PROVIDER=openai
+OPEN_AI_KEY=sk-...
+OPEN_AI_MODEL_PREF=gpt-4o
+```
+
+### 3. 데이터베이스 초기화 (최초 1회)
+
+```bash
+npm run prisma:migrate --prefix server
+```
+
+### 4. 개발 서버 실행
+
+```bash
+npm run dev
+```
+
+| 서비스 | 주소 |
+|--------|------|
+| 프론트엔드 | http://localhost:5175 |
+| API | http://localhost:3001 |
+| 헬스 체크 | GET /api/health |
+
+## 지원 노드
+
+| 노드 | 설명 |
+|------|------|
+| Start | 플로우 시작점, 초기 변수 정의 |
+| User Input | 런타임에 사용자 입력 대기 |
+| LLM Instruction | LLM 호출 및 응답 처리 |
+| Code | 커스텀 JavaScript 코드 실행 |
+| Set Variable | 변수 값 설정 |
+| Output | 결과 출력 |
+| File | 파일 입력 |
+| Website / Web Scraping | URL 기반 웹 콘텐츠 수집 |
+
+## 개발
+
+```bash
+# 서버만 실행
+npm run dev --prefix server
+
+# 프론트만 실행
+npm run dev --prefix web
+
+# 프론트 프로덕션 빌드
+npm run build --prefix web
 ```
 
 ## 라이선스
 
-이 저장소에 `LICENSE`가 없다면 내부/개인 프로젝트 정책에 맞게 추가하세요.
+Personal project — All rights reserved.
