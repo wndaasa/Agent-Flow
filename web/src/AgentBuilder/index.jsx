@@ -518,7 +518,6 @@ export default function AgentBuilder() {
       setNodes((prev) => prev.map((n) => {
         if (n.id === nodeId) return n;
         const data = { ...n.data };
-        if (data.responseVariable === varName) data.responseVariable = "";
         if (data.resultVariable   === varName) data.resultVariable   = "";
         if (data.variableName     === varName) data.variableName     = "";
         if (data.outputVariable   === varName) data.outputVariable   = "";
@@ -576,7 +575,6 @@ export default function AgentBuilder() {
     nodes.forEach((n) => {
       if (n.type === "userInput")      names.add(autoVarName(n.id));
       if (n.data?.resultVariable)      names.add(n.data.resultVariable);
-      if (n.data?.responseVariable)    names.add(n.data.responseVariable);
       if (n.data?.variableName)        names.add(n.data.variableName);
     });
     return [...names].filter(Boolean).map((name) => ({ name }));
