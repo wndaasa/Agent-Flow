@@ -1,6 +1,5 @@
 import React from "react";
-import HighlightTextarea from "../HighlightTextarea";
-import MentionDropdown from "../MentionDropdown";
+import MentionTextarea from "../components/MentionTextarea";
 import { useFlowContext } from "../FlowContext";
 import { useLocalField } from "../hooks/useLocalField";
 import { useAtMention } from "../hooks/useAtMention";
@@ -61,31 +60,14 @@ export default function CodePanel({ id, data = {} }) {
           <code>variables</code> 객체로 플로우 변수를 읽고 쓸 수 있습니다.
           <code>return</code> 값이 결과로 저장됩니다.
         </p>
-        <div className="relative">
-          <HighlightTextarea
-            value={codeField.value}
-            mentions={availableMentions}
-            wrapperClassName="bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg"
-            className="w-full text-sm text-theme-text-primary placeholder:text-theme-text-secondary/40 px-3 py-2 outline-none border-none focus:ring-1 focus:ring-primary-button/50 resize-none font-mono"
-            rows={10}
-            placeholder={"// 예시: NIA 문서 분리\nconst text = variables.양식텍스트;\nconst parts = text.split(/\\[붙임 \\d+\\]/);\nreturn { 수행계획서: parts[0], 구축계획서: parts[1], 품질관리: parts[2] };"}
-            spellCheck={false}
-            onChange={(e) => {
-              codeField.onChange(e);
-              codeMention.onTextareaChange(e);
-            }}
-            onKeyDown={codeMention.onTextareaKeyDown}
-            onKeyUp={codeMention.onTextareaKeyUp}
-            onBlur={() => setTimeout(codeMention.closeMention, 150)}
-            onCompositionStart={codeField.onCompositionStart}
-            onCompositionEnd={codeField.onCompositionEnd}
-          />
-          <MentionDropdown
-            items={codeMention.filtered}
-            selectedIndex={codeMention.selectedIndex}
-            onSelect={codeMention.selectMention}
-          />
-        </div>
+        <MentionTextarea
+          field={codeField}
+          mention={codeMention}
+          mentions={availableMentions}
+          placeholder={"// 예시: NIA 문서 분리\nconst text = variables.양식텍스트;\nconst parts = text.split(/\\[붙임 \\d+\\]/);\nreturn { 수행계획서: parts[0], 구축계획서: parts[1], 품질관리: parts[2] };"}
+          rows={10}
+          textareaClassName="font-mono"
+        />
       </div>
 
       {/* 결과 저장 변수명 */}

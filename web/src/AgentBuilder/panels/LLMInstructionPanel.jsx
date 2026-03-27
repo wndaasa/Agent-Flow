@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { CaretDown } from "@phosphor-icons/react";
-import HighlightTextarea from "../HighlightTextarea";
-import MentionDropdown from "../MentionDropdown";
+import MentionTextarea from "../components/MentionTextarea";
 import { useFlowContext } from "../FlowContext";
 import { useLocalField } from "../hooks/useLocalField";
 import { useAtMention } from "../hooks/useAtMention";
@@ -123,30 +122,13 @@ export default function LLMInstructionPanel({ id, data = {} }) {
         <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium shrink-0">
           Instruction
         </label>
-        <div className="relative flex-1 min-h-0">
-          <HighlightTextarea
-            value={instructionField.value}
-            mentions={availableMentions}
-            wrapperClassName="bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg h-full"
-            className="w-full h-full text-sm text-theme-text-primary placeholder:text-theme-text-secondary/40 px-3 py-2 outline-none border-none focus:ring-1 focus:ring-primary-button/50 resize-none"
-            placeholder={"LLM에게 전달할 지시사항&#10;@블록명 또는 ${변수명} 으로 참조 가능"}
-            spellCheck={false}
-            onChange={(e) => {
-              instructionField.onChange(e);
-              instMention.onTextareaChange(e);
-            }}
-            onKeyDown={instMention.onTextareaKeyDown}
-            onKeyUp={instMention.onTextareaKeyUp}
-            onBlur={() => setTimeout(instMention.closeMention, 150)}
-            onCompositionStart={instructionField.onCompositionStart}
-            onCompositionEnd={instructionField.onCompositionEnd}
-          />
-          <MentionDropdown
-            items={instMention.filtered}
-            selectedIndex={instMention.selectedIndex}
-            onSelect={instMention.selectMention}
-          />
-        </div>
+        <MentionTextarea
+          field={instructionField}
+          mention={instMention}
+          mentions={availableMentions}
+          placeholder={"LLM에게 전달할 지시사항&#10;@블록명 또는 ${변수명} 으로 참조 가능"}
+          grow
+        />
       </div>
 
       {/* 고급 옵션 토글 */}
@@ -242,31 +224,13 @@ export default function LLMInstructionPanel({ id, data = {} }) {
               시스템 프롬프트{" "}
               <span className="normal-case opacity-60 font-normal">(선택)</span>
             </label>
-            <div className="relative">
-              <HighlightTextarea
-                value={systemPromptField.value}
-                mentions={availableMentions}
-                wrapperClassName="bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg"
-                className="w-full text-sm text-theme-text-primary placeholder:text-theme-text-secondary/40 px-3 py-2 outline-none border-none focus:ring-1 focus:ring-primary-button/50 resize-none"
-                rows={3}
-                placeholder="AI의 역할·맥락 지정 (선택)&#10;@블록명으로 참조 가능"
-                spellCheck={false}
-                onChange={(e) => {
-                  systemPromptField.onChange(e);
-                  spMention.onTextareaChange(e);
-                }}
-                onKeyDown={spMention.onTextareaKeyDown}
-                onKeyUp={spMention.onTextareaKeyUp}
-                onBlur={() => setTimeout(spMention.closeMention, 150)}
-                onCompositionStart={systemPromptField.onCompositionStart}
-                onCompositionEnd={systemPromptField.onCompositionEnd}
-              />
-              <MentionDropdown
-                items={spMention.filtered}
-                selectedIndex={spMention.selectedIndex}
-                onSelect={spMention.selectMention}
-              />
-            </div>
+            <MentionTextarea
+              field={systemPromptField}
+              mention={spMention}
+              mentions={availableMentions}
+              placeholder="AI의 역할·맥락 지정 (선택)&#10;@블록명으로 참조 가능"
+              rows={3}
+            />
           </div>
         </div>
       )}
