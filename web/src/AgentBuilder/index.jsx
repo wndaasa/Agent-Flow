@@ -25,7 +25,7 @@ import paths from "@/utils/paths";
 import { FlowContext } from "./FlowContext";
 import { NODE_INFO } from "./nodeConstants.jsx";
 import { useLocalField } from "./hooks/useLocalField";
-import { autoVarName } from "./nodes/UserInputNode";
+import { autoVarName, autoLlmVarName, autoCodeVarName } from "./utils/autoVarNames";
 
 import HeaderMenu   from "./HeaderMenu";
 import TopToolbar   from "./TopToolbar";
@@ -38,20 +38,6 @@ import LLMInstructionNode from "./nodes/LLMInstructionNode";
 import SetVariableNode    from "./nodes/SetVariableNode";
 import CodeNode           from "./nodes/CodeNode";
 import OutputNode         from "./nodes/OutputNode";
-
-/* ── 유틸 ──────────────────────────────────────────────────── */
-
-/** LLM 노드 결과 자동 변수명 (백엔드와 동일한 로직) */
-function autoLlmVarName(nodeId) {
-  const tail = (nodeId || "llm").split("_").pop();
-  return `llm_${tail.slice(-8)}`;
-}
-
-/** Code 노드 결과 자동 변수명 (백엔드와 동일한 로직) */
-function autoCodeVarName(nodeId) {
-  const tail = (nodeId || "code").split("_").pop();
-  return `code_${tail.slice(-8)}`;
-}
 
 /** 엣지 목록에 (source → target) 을 추가하면 순환이 생기는지 검사 */
 function wouldCreateCycle(source, target, existingEdges) {

@@ -1,10 +1,5 @@
 const { FlowExecutor } = require("./executor");
-
-/** 노드 ID 기반 자동 변수명 (프론트와 동일한 로직) */
-function autoVarName(nodeId) {
-  const tail = (nodeId || "input").split("_").pop();
-  return `input_${tail.slice(-8)}`;
-}
+const { autoVarName } = require("./autoVarNames");
 
 /**
  * 스트리밍 실행기 - SSE 이벤트를 에밋하며 플로우를 실행
