@@ -38,7 +38,7 @@ export default function SetVariablePanel({ id, data = {} }) {
     <div className="space-y-5">
       {/* 노드 이름 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           이름
         </label>
         <input
@@ -47,13 +47,13 @@ export default function SetVariablePanel({ id, data = {} }) {
           placeholder="노드 이름 (선택)"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* 변수명 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           변수명
         </label>
         <input
@@ -62,13 +62,13 @@ export default function SetVariablePanel({ id, data = {} }) {
           placeholder="예: result"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* 변수 값 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           값{" "}
           <span className="normal-case font-normal opacity-60">
             (@블록명 또는 {"${변수명}"} 참조 가능)

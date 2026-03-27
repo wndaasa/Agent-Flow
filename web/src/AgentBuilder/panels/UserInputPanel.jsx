@@ -38,7 +38,7 @@ export default function UserInputPanel({ id, data = {} }) {
     <div className="space-y-5">
       {/* 노드 이름 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           이름
         </label>
         <input
@@ -47,13 +47,13 @@ export default function UserInputPanel({ id, data = {} }) {
           placeholder="노드 이름 (선택)"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* 메시지 (사용자에게 보여줄 안내문) */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           메시지
         </label>
         <MentionTextarea
@@ -81,13 +81,13 @@ export default function UserInputPanel({ id, data = {} }) {
         <div className="space-y-4 border border-white/5 light:border-black/5 rounded-lg p-3">
           {/* 입력 타입 */}
           <div>
-            <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+            <label className="panel-label">
               Input Type
             </label>
             <select
               value={data.inputType || "any"}
               onChange={(e) => update({ inputType: e.target.value })}
-              className="w-full bg-theme-settings-input-bg border border-white/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50"
+              className="panel-input"
             >
               {USER_INPUT_TYPE_OPTIONS.map((t) => (
                 <option key={t.value} value={t.value} className="bg-theme-bg-primary">

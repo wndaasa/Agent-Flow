@@ -39,7 +39,7 @@ export default function OutputPanel({ id, data = {} }) {
 
       {/* 출력 템플릿 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           출력 템플릿
         </label>
         <MentionTextarea

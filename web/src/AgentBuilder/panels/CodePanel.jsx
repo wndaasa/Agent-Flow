@@ -38,7 +38,7 @@ export default function CodePanel({ id, data = {} }) {
     <div className="space-y-5">
       {/* 노드 이름 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           이름
         </label>
         <input
@@ -47,13 +47,13 @@ export default function CodePanel({ id, data = {} }) {
           placeholder="노드 이름 (선택)"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* 코드 입력 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           JavaScript 코드
         </label>
         <p className="text-[10px] text-theme-text-secondary/60 mb-2 leading-relaxed">
@@ -72,7 +72,7 @@ export default function CodePanel({ id, data = {} }) {
 
       {/* 결과 저장 변수명 */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           결과 저장 변수명{" "}
           <span className="normal-case opacity-60 font-normal">(선택)</span>
         </label>
@@ -82,13 +82,13 @@ export default function CodePanel({ id, data = {} }) {
           placeholder="미지정 시 자동 생성 (code_xxxxxxxx)"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* 출력 속성 키 (JSON 반환 시 @블록명.속성 자동완성용) */}
       <div>
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           출력 속성 키{" "}
           <span className="normal-case opacity-60 font-normal">(JSON 반환 시)</span>
         </label>
@@ -108,7 +108,7 @@ export default function CodePanel({ id, data = {} }) {
           placeholder="예: 수행계획서, 구축계획서, 품질관리계획서"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
     </div>

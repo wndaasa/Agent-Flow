@@ -104,7 +104,7 @@ export default function LLMInstructionPanel({ id, data = {} }) {
     <div className="flex flex-col gap-5 h-full">
       {/* 노드 이름 */}
       <div className="shrink-0">
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+        <label className="panel-label">
           이름
         </label>
         <input
@@ -113,13 +113,13 @@ export default function LLMInstructionPanel({ id, data = {} }) {
           placeholder="노드 이름 (선택)"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+          className="panel-input"
         />
       </div>
 
       {/* Instruction — 남은 공간을 전부 채움 */}
       <div className="flex-1 flex flex-col min-h-0">
-        <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium shrink-0">
+        <label className="panel-label shrink-0">
           Instruction
         </label>
         <MentionTextarea
@@ -146,7 +146,7 @@ export default function LLMInstructionPanel({ id, data = {} }) {
         <div className="shrink-0 space-y-4 border border-white/5 light:border-black/5 rounded-lg p-3">
           {/* 프로바이더 선택 */}
           <div>
-            <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+            <label className="panel-label">
               Provider
             </label>
             <select
@@ -160,7 +160,7 @@ export default function LLMInstructionPanel({ id, data = {} }) {
                   model: nextProvider === "ollama" ? "" : firstModel,
                 });
               }}
-              className="w-full bg-theme-settings-input-bg border border-white/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50"
+              className="panel-input"
             >
               {providerOptions.map((p) => (
                 <option key={p.value === "" ? "__default__" : p.value} value={p.value} className="bg-theme-bg-primary">
@@ -172,7 +172,7 @@ export default function LLMInstructionPanel({ id, data = {} }) {
 
           {/* 모델 선택 */}
           <div>
-            <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+            <label className="panel-label">
               모델
             </label>
             <select
@@ -184,7 +184,7 @@ export default function LLMInstructionPanel({ id, data = {} }) {
                   update({ model: e.target.value });
                 }
               }}
-              className="w-full bg-theme-settings-input-bg border border-white/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50"
+              className="panel-input"
             >
               {(data.provider ?? "") === "ollama" && ollamaLoading && (
                 <option value="" className="bg-theme-bg-primary">
@@ -213,14 +213,14 @@ export default function LLMInstructionPanel({ id, data = {} }) {
                 placeholder="모델 ID 직접 입력"
                 autoComplete="off"
                 spellCheck={false}
-                className="mt-2 w-full bg-theme-settings-input-bg border border-white/10 rounded-lg px-3 py-2 text-sm text-theme-text-primary focus:outline-none focus:ring-1 focus:ring-primary-button/50 placeholder:text-theme-text-secondary/40"
+                className="panel-input mt-2"
               />
             )}
           </div>
 
           {/* 시스템 프롬프트 */}
           <div>
-            <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
+            <label className="panel-label">
               시스템 프롬프트{" "}
               <span className="normal-case opacity-60 font-normal">(선택)</span>
             </label>
