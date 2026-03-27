@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
-import HighlightTextarea from "../HighlightTextarea";
-import MentionDropdown from "../MentionDropdown";
+import MentionTextarea from "../components/MentionTextarea";
 import { useFlowContext } from "../FlowContext";
 import { useLocalField } from "../hooks/useLocalField";
 import { useAtMention } from "../hooks/useAtMention";
@@ -57,31 +56,13 @@ export default function UserInputPanel({ id, data = {} }) {
         <label className="text-[11px] text-theme-text-secondary uppercase tracking-wide mb-1.5 block font-medium">
           메시지
         </label>
-        <div className="relative">
-          <HighlightTextarea
-            value={promptField.value}
-            mentions={availableMentions}
-            wrapperClassName="bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg"
-            className="w-full text-sm text-theme-text-primary placeholder:text-theme-text-secondary/40 px-3 py-2 outline-none border-none focus:ring-1 focus:ring-primary-button/50 resize-none"
-            rows={4}
-            placeholder="사용자에게 보여줄 안내 문구&#10;@블록명으로 이전 결과를 참조할 수 있습니다"
-            spellCheck={false}
-            onChange={(e) => {
-              promptField.onChange(e);
-              promptMention.onTextareaChange(e);
-            }}
-            onKeyDown={promptMention.onTextareaKeyDown}
-            onKeyUp={promptMention.onTextareaKeyUp}
-            onBlur={() => setTimeout(promptMention.closeMention, 150)}
-            onCompositionStart={promptField.onCompositionStart}
-            onCompositionEnd={promptField.onCompositionEnd}
-          />
-          <MentionDropdown
-            items={promptMention.filtered}
-            selectedIndex={promptMention.selectedIndex}
-            onSelect={promptMention.selectMention}
-          />
-        </div>
+        <MentionTextarea
+          field={promptField}
+          mention={promptMention}
+          mentions={availableMentions}
+          placeholder="사용자에게 보여줄 안내 문구&#10;@블록명으로 이전 결과를 참조할 수 있습니다"
+          rows={4}
+        />
       </div>
 
       {/* 고급 설정 토글 */}

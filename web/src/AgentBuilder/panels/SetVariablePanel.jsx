@@ -1,6 +1,5 @@
 import React from "react";
-import HighlightTextarea from "../HighlightTextarea";
-import MentionDropdown from "../MentionDropdown";
+import MentionTextarea from "../components/MentionTextarea";
 import { useFlowContext } from "../FlowContext";
 import { useLocalField } from "../hooks/useLocalField";
 import { useAtMention } from "../hooks/useAtMention";
@@ -75,31 +74,13 @@ export default function SetVariablePanel({ id, data = {} }) {
             (@블록명 또는 {"${변수명}"} 참조 가능)
           </span>
         </label>
-        <div className="relative">
-          <HighlightTextarea
-            value={valueField.value}
-            mentions={availableMentions}
-            wrapperClassName="bg-theme-settings-input-bg border border-white/10 light:border-black/10 rounded-lg"
-            className="w-full text-sm text-theme-text-primary placeholder:text-theme-text-secondary/40 px-3 py-2 outline-none border-none focus:ring-1 focus:ring-primary-button/50 resize-none"
-            rows={4}
-            placeholder={"예: @블록명 또는 ${변수명}"}
-            spellCheck={false}
-            onChange={(e) => {
-              valueField.onChange(e);
-              valueMention.onTextareaChange(e);
-            }}
-            onKeyDown={valueMention.onTextareaKeyDown}
-            onKeyUp={valueMention.onTextareaKeyUp}
-            onBlur={() => setTimeout(valueMention.closeMention, 150)}
-            onCompositionStart={valueField.onCompositionStart}
-            onCompositionEnd={valueField.onCompositionEnd}
-          />
-          <MentionDropdown
-            items={valueMention.filtered}
-            selectedIndex={valueMention.selectedIndex}
-            onSelect={valueMention.selectMention}
-          />
-        </div>
+        <MentionTextarea
+          field={valueField}
+          mention={valueMention}
+          mentions={availableMentions}
+          placeholder={"예: @블록명 또는 ${변수명}"}
+          rows={4}
+        />
       </div>
     </div>
   );
