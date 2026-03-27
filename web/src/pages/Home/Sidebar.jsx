@@ -5,7 +5,7 @@ const NAV_ITEMS = [
 
 export default function Sidebar({ activeSection, onSectionChange }) {
   return (
-    <aside className="w-52 shrink-0 flex flex-col border-r border-white/5 bg-[var(--theme-bg-sidebar)] h-full">
+    <aside className="w-52 shrink-0 flex flex-col border-r border-white/8 bg-[#111214] h-full">
       {/* Logo */}
       <div className="flex items-center px-5 h-14 border-b border-white/5">
         <span className="font-semibold text-sm text-[var(--theme-text-primary)] tracking-tight">

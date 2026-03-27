@@ -91,10 +91,10 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
           </button>
 
           {/* Action buttons — shown on hover */}
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={goEdit}
-              className="px-2 py-1 text-[11px] text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-white/5 rounded-md transition-colors"
+              className="px-2.5 py-1 text-[11px] rounded-md border border-white/10 text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:border-white/20 transition-colors"
             >
               편집
             </button>
@@ -103,7 +103,7 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
                 e.stopPropagation();
                 navigate(paths.agents.editAgent(flow.uuid) + "?run=1");
               }}
-              className="px-2 py-1 text-[11px] text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-white/5 rounded-md transition-colors"
+              className="px-2.5 py-1 text-[11px] rounded-md border border-white/10 text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:border-white/20 transition-colors"
             >
               실행
             </button>
