@@ -1,63 +1,85 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { MagnifyingGlass, Plus, Atom } from "@phosphor-icons/react";
 import AgentFlows from "@/models/agentFlows";
 import paths from "@/utils/paths";
 import Sidebar from "./Sidebar";
 import FlowCard from "./FlowCard";
 import NewButton from "./NewButton";
 
-// ── Skeleton card ────────────────────────────────────────────────────────────
+const PAGE_BG = "#13151c";
+const HEADER_BORDER = "rgba(255,255,255,0.06)";
+
+// ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
-    <div className="rounded-xl border border-white/5 bg-[var(--theme-bg-secondary)] animate-pulse">
+    <div
+      className="rounded-xl animate-pulse overflow-hidden"
+      style={{ background: "#1a1d27", border: "1px solid rgba(255,255,255,0.07)" }}
+    >
+      <div className="h-0.5 w-full" style={{ background: "rgba(255,255,255,0.08)" }} />
       <div className="p-4">
         <div className="mb-4 space-y-2">
-          <div className="h-3.5 bg-white/5 rounded w-2/3" />
-          <div className="h-2.5 bg-white/5 rounded w-1/2" />
+          <div className="h-3.5 rounded w-2/3" style={{ background: "rgba(255,255,255,0.06)" }} />
+          <div className="h-2.5 rounded w-1/3" style={{ background: "rgba(255,255,255,0.04)" }} />
         </div>
-        <div className="pt-3 border-t border-white/5">
-          <div className="h-2.5 bg-white/5 rounded w-1/4" />
+        <div className="pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="h-2.5 rounded w-1/4" style={{ background: "rgba(255,255,255,0.04)" }} />
         </div>
       </div>
     </div>
   );
 }
 
-// ── Empty state ──────────────────────────────────────────────────────────────
+// ── Empty state ───────────────────────────────────────────────────────────────
 function EmptyState({ onNew }) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 text-center py-24">
-      <p className="text-sm font-medium text-[var(--theme-text-primary)] mb-1.5">
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
+        style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.2)" }}
+      >
+        <Atom className="w-7 h-7" style={{ color: "#6366f1" }} weight="duotone" />
+      </div>
+      <p className="text-sm font-semibold mb-1.5" style={{ color: "#e8eaf0" }}>
         아직 플로우가 없어요
       </p>
-      <p className="text-xs text-[var(--theme-text-secondary)] mb-6">
+      <p className="text-xs mb-6" style={{ color: "#4a4f5c" }}>
         첫 번째 AI 워크플로우를 만들어보세요
       </p>
       <button
         onClick={onNew}
-        className="px-4 py-2 rounded-lg text-sm font-medium border border-white/15 text-[var(--theme-text-primary)] bg-white/5 hover:bg-white/10 hover:border-white/25 transition-colors"
+        className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150"
+        style={{
+          background: "#6366f1",
+          color: "#ffffff",
+          boxShadow: "0 1px 6px rgba(99,102,241,0.35)",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = "#5254cc")}
+        onMouseLeave={(e) => (e.currentTarget.style.background = "#6366f1")}
       >
-        + New Flow
+        <Plus className="w-3.5 h-3.5" weight="bold" />
+        New Flow
       </button>
     </div>
   );
 }
 
-// ── Notebooks placeholder ────────────────────────────────────────────────────
+// ── Notebooks placeholder ─────────────────────────────────────────────────────
 function NotebooksPlaceholder() {
   return (
     <div className="flex flex-col items-center justify-center flex-1 text-center py-24">
-      <p className="text-sm font-medium text-[var(--theme-text-primary)] mb-1.5">
+      <p className="text-sm font-semibold mb-1.5" style={{ color: "#e8eaf0" }}>
         Notebooks
       </p>
-      <p className="text-xs text-[var(--theme-text-secondary)]">
+      <p className="text-xs" style={{ color: "#4a4f5c" }}>
         곧 출시 예정이에요
       </p>
     </div>
   );
 }
 
-// ── Home ─────────────────────────────────────────────────────────────────────
+// ── Home ──────────────────────────────────────────────────────────────────────
 export default function Home() {
   const navigate = useNavigate();
   const [section, setSection] = useState("flows");
@@ -86,18 +108,30 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-[var(--theme-bg-primary)] overflow-hidden">
+    <div
+      className="flex h-screen w-screen overflow-hidden"
+      style={{ background: PAGE_BG }}
+    >
       <Sidebar activeSection={section} onSectionChange={setSection} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* ── Top bar ── */}
-        <header className="flex items-center justify-between px-8 h-14 border-b border-white/5 shrink-0">
+        <header
+          className="flex items-center justify-between px-8 h-14 shrink-0"
+          style={{ borderBottom: `1px solid ${HEADER_BORDER}` }}
+        >
           <div className="flex items-baseline gap-2">
-            <h1 className="text-sm font-semibold text-[var(--theme-text-primary)]">
+            <h1 className="text-sm font-semibold" style={{ color: "#e8eaf0" }}>
               {section === "flows" ? "Flows" : "Notebooks"}
             </h1>
             {section === "flows" && !loading && (
-              <span className="text-[11px] text-[var(--theme-text-secondary)]">
+              <span
+                className="text-[11px] px-1.5 py-0.5 rounded"
+                style={{
+                  color: "#4a4f5c",
+                  background: "rgba(255,255,255,0.05)",
+                }}
+              >
                 {flows.length}
               </span>
             )}
@@ -105,13 +139,26 @@ export default function Home() {
 
           <div className="flex items-center gap-2">
             {/* Search */}
-            <input
-              type="text"
-              placeholder="검색..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent border border-white/12 hover:border-white/20 focus:border-white/25 rounded-lg px-3 py-1.5 text-sm text-[var(--theme-text-primary)] outline-none transition-colors w-40"
-            />
+            <div className="relative">
+              <MagnifyingGlass
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none"
+                style={{ color: "#4a4f5c" }}
+              />
+              <input
+                type="text"
+                placeholder="검색..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="rounded-lg pl-8 pr-3 py-1.5 text-sm outline-none transition-all w-40"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "#e8eaf0",
+                }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(99,102,241,0.5)")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}
+              />
+            </div>
             <NewButton />
           </div>
         </header>
@@ -129,7 +176,7 @@ export default function Home() {
               ) : flows.length === 0 ? (
                 <EmptyState onNew={() => navigate(paths.agents.builder())} />
               ) : filtered.length === 0 ? (
-                <p className="text-sm text-[var(--theme-text-secondary)] text-center mt-16">
+                <p className="text-sm text-center mt-16" style={{ color: "#4a4f5c" }}>
                   &quot;{search}&quot;에 해당하는 플로우가 없어요
                 </p>
               ) : (
