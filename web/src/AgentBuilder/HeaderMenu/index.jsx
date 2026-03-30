@@ -46,9 +46,9 @@ export default function HeaderMenu({
 
           {/* 뒤로가기 */}
           <button
-            onClick={() => navigate(paths.settings.agentSkills())}
+            onClick={() => navigate(paths.home())}
             className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-settings-input-bg border border-white/10 hover:bg-theme-action-menu-bg transition-colors duration-200 shrink-0"
-            title="Agent Skills 로 돌아가기"
+            title="홈으로 돌아가기"
           >
             <CaretLeft weight="bold" className="w-5 h-5 text-theme-text-primary" />
           </button>
