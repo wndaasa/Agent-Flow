@@ -1,8 +1,9 @@
 const OpenAI = require("openai");
+const Anthropic = require("@anthropic-ai/sdk");
 
 /**
- * Agent Flow LLMInstruction 전용 최소 어댑터 (OpenAI chat.completions).
- * Anthropic 등은 미구현 — 노드에서 provider 비우면 env 기본값 사용.
+ * Agent Flow LLMInstruction 전용 최소 어댑터.
+ * OpenAI(기본) / Anthropic / Ollama 지원.
  */
 class MinimalAibitat {
   constructor({ onLog } = {}) {
@@ -22,17 +23,31 @@ class MinimalAibitat {
       this.defaultProvider.provider;
     const model = config.model || this.defaultProvider.model;
 
-    if (provider !== "openai") {
-      throw new Error(
-        `[agent-flow] 현재 LLM Instruction은 OpenAI만 지원합니다. (provider=${provider})`
-      );
+    if (provider === "anthropic") {
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (!apiKey) {
+        throw new Error("ANTHROPIC_API_KEY 가 설정되어 있지 않습니다.");
+      }
+      const client = new Anthropic({ apiKey });
+      return { client, model: model || "claude-opus-4-6", maxTokens: undefined, _isAnthropic: true };
     }
-    const apiKey = process.env.OPEN_AI_KEY;
-    if (!apiKey) {
-      throw new Error("OPEN_AI_KEY 가 설정되어 있지 않습니다.");
+
+    if (provider === "openai" || provider === "ollama") {
+      const apiKey = process.env.OPEN_AI_KEY;
+      if (provider === "openai" && !apiKey) {
+        throw new Error("OPEN_AI_KEY 가 설정되어 있지 않습니다.");
+      }
+      const clientOpts = { apiKey: apiKey || "ollama" };
+      if (provider === "ollama") {
+        clientOpts.baseURL = process.env.OLLAMA_BASE_PATH || "http://localhost:11434/v1";
+      }
+      const client = new OpenAI(clientOpts);
+      return { client, model, maxTokens: undefined };
     }
-    const client = new OpenAI({ apiKey });
-    return { client, model, maxTokens: undefined };
+
+    throw new Error(
+      `[agent-flow] 지원하지 않는 LLM provider입니다. (provider=${provider})`
+    );
   }
 }
 
