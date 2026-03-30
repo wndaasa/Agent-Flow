@@ -6,6 +6,8 @@ import {
   ChatDots,
   Tag,
   Code,
+  Globe,
+  Lightning,
 } from "@phosphor-icons/react";
 
 export const NODE_TYPES_MAP = {
@@ -15,6 +17,8 @@ export const NODE_TYPES_MAP = {
   setVariable: "setVariable",
   code: "code",
   output: "output",
+  apiCall: "apiCall",
+  webScraping: "webScraping",
 };
 
 /**
@@ -114,6 +118,37 @@ export const NODE_INFO = {
     color: "#10b981", // emerald
     previewText: (data) => data.template?.trim() || null,
   },
+
+  [NODE_TYPES_MAP.apiCall]: {
+    label: "API Call",
+    icon: <Lightning className="w-4 h-4" />,
+    description: "외부 HTTP API 호출",
+    defaultData: {
+      url: "",
+      method: "GET",
+      headers: [],
+      body: "",
+      bodyType: "json",
+      responseVariable: "",
+    },
+    color: "#f97316", // orange
+    previewText: (data) => data.url?.trim() || null,
+  },
+
+  [NODE_TYPES_MAP.webScraping]: {
+    label: "Web Scraping",
+    icon: <Globe className="w-4 h-4" />,
+    description: "웹 페이지 콘텐츠 수집",
+    defaultData: {
+      url: "",
+      captureAs: "text",
+      querySelector: "",
+      enableSummarization: true,
+      resultVariable: "",
+    },
+    color: "#06b6d4", // cyan
+    previewText: (data) => data.url?.trim() || null,
+  },
 };
 
 /**
@@ -124,4 +159,6 @@ export const DRAGGABLE_NODE_TYPES = [
   NODE_TYPES_MAP.userInput,
   NODE_TYPES_MAP.llmInstruction,
   NODE_TYPES_MAP.setVariable,
+  NODE_TYPES_MAP.apiCall,
+  NODE_TYPES_MAP.webScraping,
 ];

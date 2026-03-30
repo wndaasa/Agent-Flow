@@ -13,6 +13,8 @@ import LLMInstructionPanel from "../panels/LLMInstructionPanel";
 import SetVariablePanel from "../panels/SetVariablePanel";
 import CodePanel from "../panels/CodePanel";
 import OutputPanel from "../panels/OutputPanel";
+import ApiCallPanel from "../panels/ApiCallPanel";
+import WebScrapingPanel from "../panels/WebScrapingPanel";
 
 export const PANEL_REGISTRY = {
   start: StartPanel,
@@ -22,4 +24,6 @@ export const PANEL_REGISTRY = {
   code: CodePanel,
   output: OutputPanel,
   finish: OutputPanel, // 하위 호환 (구버전 플로우)
+  apiCall: ApiCallPanel,
+  webScraping: WebScrapingPanel,
 };

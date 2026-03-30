@@ -38,6 +38,8 @@ import LLMInstructionNode from "./nodes/LLMInstructionNode";
 import SetVariableNode    from "./nodes/SetVariableNode";
 import CodeNode           from "./nodes/CodeNode";
 import OutputNode         from "./nodes/OutputNode";
+import ApiCallNode        from "./nodes/ApiCallNode";
+import WebScrapingNode    from "./nodes/WebScrapingNode";
 
 /** 엣지 목록에 (source → target) 을 추가하면 순환이 생기는지 검사 */
 function wouldCreateCycle(source, target, existingEdges) {
@@ -114,6 +116,8 @@ const NODE_TYPES = {
   code:           CodeNode,
   output:         OutputNode,
   finish:         OutputNode, // 구버전 저장 플로우 하위 호환
+  apiCall:        ApiCallNode,
+  webScraping:    WebScrapingNode,
 };
 
 /** 엣지 스타일 — 실선 */
