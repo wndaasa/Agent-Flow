@@ -1,6 +1,7 @@
 /** Agent Flow 플랫폼 라우트 */
 const paths = {
   home: () => "/",
+  settings: () => "/settings",
   agents: {
     builder: () => "/builder",
     editAgent: (uuid) => `/builder/${uuid}`,

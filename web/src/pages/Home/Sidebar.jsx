@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { Atom, BookOpen, GearSix } from "@phosphor-icons/react";
+import paths from "@/utils/paths";
 
 const NAV_ITEMS = [
   { id: "flows",     label: "Flows",     icon: Atom,     available: true  },
@@ -6,6 +8,7 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar({ activeSection, onSectionChange }) {
+  const navigate = useNavigate();
   return (
     <aside
       className="w-52 shrink-0 flex flex-col h-full"
@@ -90,6 +93,7 @@ export default function Sidebar({ activeSection, onSectionChange }) {
         style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
       >
         <button
+          onClick={() => navigate(paths.settings())}
           className="flex items-center gap-2.5 px-3 py-2 rounded-lg w-full text-sm transition-all duration-150"
           style={{ color: "#4a4f5c" }}
           onMouseEnter={(e) => {

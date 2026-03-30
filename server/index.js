@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { registerAgentFlowsCrud } = require("./routes/agentFlowsCrud");
 const { registerAgentFlowRunRoutes } = require("./routes/agentFlowRun");
+const { registerSettingsRoutes } = require("./routes/settings");
 
 const app = express();
 app.use(cors({ origin: true, credentials: true }));
@@ -14,6 +15,7 @@ app.get("/api/health", (_req, res) => {
 
 registerAgentFlowsCrud(app);
 registerAgentFlowRunRoutes(app);
+registerSettingsRoutes(app);
 
 const PORT = Number(process.env.PORT) || 3001;
 app.listen(PORT, "0.0.0.0", () => {
