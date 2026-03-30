@@ -75,6 +75,11 @@ class FlowExecutor {
     }
 
     if (currentPart) parts.push(currentPart);
+
+    // 프로토타입 오염 방지: 위험 키 차단
+    const DANGEROUS_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+    if (parts.some((p) => DANGEROUS_KEYS.has(p))) return "";
+
     let current = obj;
 
     for (const part of parts) {
@@ -84,15 +89,17 @@ class FlowExecutor {
         const key = part.slice(1, -1);
         const cleanKey = key.replace(/^['"]|['"]$/g, "");
 
+        if (DANGEROUS_KEYS.has(cleanKey)) return "";
+
         if (!isNaN(cleanKey)) {
           if (!Array.isArray(current)) return undefined;
           current = current[parseInt(cleanKey)];
         } else {
-          if (!(cleanKey in current)) return undefined;
+          if (!Object.prototype.hasOwnProperty.call(current, cleanKey)) return undefined;
           current = current[cleanKey];
         }
       } else {
-        if (!(part in current)) return undefined;
+        if (!Object.prototype.hasOwnProperty.call(current, part)) return undefined;
         current = current[part];
       }
 
