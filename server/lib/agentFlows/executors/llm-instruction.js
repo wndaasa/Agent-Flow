@@ -10,9 +10,9 @@ async function executeLLMInstruction(config, context) {
   const { instruction, systemPrompt, provider, model, resultVariable } = config;
   const { introspect, logger, aibitat, nodeId, emitAgentStream } = context;
   logger(
-    `\x1b[43m[AgentFlowToolExecutor]\x1b[0m - executing LLM Instruction block`
+    `\x1b[43m[AgentFlowToolExecutor]\x1b[0m - LLM Instruction 블록 실행 중`
   );
-  introspect(`Processing data with LLM instruction...`);
+  introspect(`LLM 명령 처리 중...`);
 
   try {
     const providerConfig =
@@ -25,9 +25,9 @@ async function executeLLMInstruction(config, context) {
         : aibitat.defaultProvider;
 
     logger(
-      `Sending request to LLM (${providerConfig.provider}::${providerConfig.model})`
+      `LLM 요청 전송 중 (${providerConfig.provider}::${providerConfig.model})`
     );
-    introspect(`Sending request to LLM...`);
+    introspect(`LLM에 요청 전송 중...`);
 
     let input = instruction;
     if (typeof input === "object") input = JSON.stringify(input);
@@ -56,13 +56,13 @@ async function executeLLMInstruction(config, context) {
       fallbackComplete: () => llmProvider.complete(messages),
     });
 
-    introspect(`Successfully received LLM response`);
+    introspect(`LLM 응답 수신 완료`);
     if (resultVariable) config.resultVariable = resultVariable;
 
     return { value: out.value ?? "", reasoning: out.reasoning ?? null };
   } catch (error) {
-    logger(`LLM processing failed: ${error.message}`, error);
-    throw new Error(`LLM processing failed: ${error.message}`);
+    logger(`LLM 처리 실패: ${error.message}`, error);
+    throw new Error(`LLM 처리 실패: ${error.message}`);
   }
 }
 
