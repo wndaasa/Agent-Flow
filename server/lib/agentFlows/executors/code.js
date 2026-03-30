@@ -18,21 +18,20 @@ async function executeCode(config, context) {
   // 코드를 즉시실행 async 함수로 감싸서 return 문 사용 가능하게 함
   const wrapped = `(async () => { ${code} })()`;
 
-  const sandbox = {
+  // 화이트리스트 방식: 명시적으로 허용된 값만 노출
+  // Object/Array 등 네이티브 생성자는 constructor 체인을 통해 process 접근이 가능하므로 제외
+  const sandbox = Object.create(null);
+  Object.assign(sandbox, {
     variables: context.variables,
-    console: {
+    console: Object.assign(Object.create(null), {
       log: (...args) => context.logger?.("[Code]", ...args),
       error: (...args) => context.logger?.("[Code:error]", ...args),
-    },
-    JSON,
+    }),
+    JSON: Object.assign(Object.create(null), {
+      parse: JSON.parse.bind(JSON),
+      stringify: JSON.stringify.bind(JSON),
+    }),
     Math,
-    Date,
-    RegExp,
-    Array,
-    Object,
-    String,
-    Number,
-    Boolean,
     parseInt,
     parseFloat,
     isNaN,
@@ -41,7 +40,7 @@ async function executeCode(config, context) {
     decodeURIComponent,
     encodeURI,
     decodeURI,
-  };
+  });
 
   const vmContext = vm.createContext(sandbox);
 

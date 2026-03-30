@@ -38,6 +38,8 @@ import LLMInstructionNode from "./nodes/LLMInstructionNode";
 import SetVariableNode    from "./nodes/SetVariableNode";
 import CodeNode           from "./nodes/CodeNode";
 import OutputNode         from "./nodes/OutputNode";
+import ApiCallNode        from "./nodes/ApiCallNode";
+import WebScrapingNode    from "./nodes/WebScrapingNode";
 
 /** 엣지 목록에 (source → target) 을 추가하면 순환이 생기는지 검사 */
 function wouldCreateCycle(source, target, existingEdges) {
@@ -66,17 +68,21 @@ function stripMentionPatternsForLabel(text, sourceLabel) {
   return text.replace(re, "").replace(/\n{3,}/g, "\n\n");
 }
 
-/** 엣지 배열에서 순환을 만드는 엣지를 제거 (위상정렬 순서 유지) */
+/** 엣지 배열에서 순환을 만드는 엣지를 제거 (위상정렬 순서 유지)
+ * @returns {{ edges: Edge[], removed: number }} 정제된 엣지 배열과 제거된 수
+ */
 function removeCyclicEdges(edges) {
   const clean = [];
+  let removed = 0;
   for (const edge of edges) {
     if (wouldCreateCycle(edge.source, edge.target, clean)) {
       console.warn(`[loadFlow] 순환 엣지 자동 제거: ${edge.source} → ${edge.target}`);
+      removed++;
     } else {
       clean.push(edge);
     }
   }
-  return clean;
+  return { edges: clean, removed };
 }
 
 /** 연결 자체가 의미 없는 엣지인지 검사 */
@@ -110,6 +116,8 @@ const NODE_TYPES = {
   code:           CodeNode,
   output:         OutputNode,
   finish:         OutputNode, // 구버전 저장 플로우 하위 호환
+  apiCall:        ApiCallNode,
+  webScraping:    WebScrapingNode,
 };
 
 /** 엣지 스타일 — 실선 */
@@ -354,8 +362,11 @@ export default function AgentBuilder() {
           return true;
         });
         // 순환 엣지 추가 제거
-        const sanitized = removeCyclicEdges(validEdges);
-        setEdges(sanitized.map((e) => ({
+        const { edges: sanitizedEdges, removed: removedCount } = removeCyclicEdges(validEdges);
+        if (removedCount > 0) {
+          showToast(`순환 연결 ${removedCount}개가 자동으로 제거되었습니다.`, "warning");
+        }
+        setEdges(sanitizedEdges.map((e) => ({
           ...e,
           style: EDGE_STYLE,
         })));
@@ -388,7 +399,7 @@ export default function AgentBuilder() {
         if (tgtNode.type === "start") return false;
         return true;
       });
-      const sanitizedEdges = removeCyclicEdges(validEdges);
+      const { edges: sanitizedEdges } = removeCyclicEdges(validEdges);
 
       const flowConfig = {
         name: flowName,

@@ -75,6 +75,11 @@ class FlowExecutor {
     }
 
     if (currentPart) parts.push(currentPart);
+
+    // 프로토타입 오염 방지: 위험 키 차단
+    const DANGEROUS_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+    if (parts.some((p) => DANGEROUS_KEYS.has(p))) return "";
+
     let current = obj;
 
     for (const part of parts) {
@@ -84,15 +89,17 @@ class FlowExecutor {
         const key = part.slice(1, -1);
         const cleanKey = key.replace(/^['"]|['"]$/g, "");
 
+        if (DANGEROUS_KEYS.has(cleanKey)) return "";
+
         if (!isNaN(cleanKey)) {
           if (!Array.isArray(current)) return undefined;
           current = current[parseInt(cleanKey)];
         } else {
-          if (!(cleanKey in current)) return undefined;
+          if (!Object.prototype.hasOwnProperty.call(current, cleanKey)) return undefined;
           current = current[cleanKey];
         }
       } else {
-        if (!(part in current)) return undefined;
+        if (!Object.prototype.hasOwnProperty.call(current, part)) return undefined;
         current = current[part];
       }
 
@@ -418,8 +425,14 @@ class FlowExecutor {
 
   /**
    * 기존 steps[] 포맷 순차 실행 (하위 호환)
+   * @deprecated steps[] 포맷은 더 이상 사용하지 않습니다. nodes+edges 포맷으로 마이그레이션하세요.
+   *   향후 버전에서 제거될 예정입니다.
    */
   async executeLegacyFlow(flow, initialVariables = {}) {
+    console.warn(
+      `[executor] 레거시 steps[] 포맷으로 실행 중 (flow id=${flow.id ?? "?"}, uuid=${flow.uuid ?? "?"}). ` +
+      `이 포맷은 deprecated되었으며 향후 제거됩니다. nodes+edges 포맷으로 전환하세요.`
+    );
     this.variables = {
       ...(
         flow.config.steps.find((s) => s.type === "start")?.config?.variables ||

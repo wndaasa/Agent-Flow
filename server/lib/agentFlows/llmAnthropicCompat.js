@@ -202,10 +202,10 @@ async function runAnthropicAgentFlowLlm({
 }
 
 function isAnthropicMessagesProvider(llmProvider) {
+  if (llmProvider?._isAnthropic) return true;
   const c = llmProvider?.client;
   return (
-    llmProvider?.constructor?.name === "AnthropicProvider" &&
-    c &&
+    c != null &&
     typeof c.messages?.create === "function" &&
     typeof c.chat?.completions?.create !== "function"
   );

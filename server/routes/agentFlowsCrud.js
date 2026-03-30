@@ -12,9 +12,9 @@ function registerAgentFlowsCrud(app) {
       }
       const flow = await AgentFlows.saveFlow(name, config, uuid);
       if (!flow || !flow.success) {
-        return res.status(200).json({
-          flow: null,
-          error: flow?.error || "Failed to save flow",
+        return res.status(500).json({
+          success: false,
+          error: flow?.error || "플로우 저장에 실패했습니다",
         });
       }
       return res.status(200).json({ success: true, flow });
