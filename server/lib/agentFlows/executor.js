@@ -425,8 +425,14 @@ class FlowExecutor {
 
   /**
    * 기존 steps[] 포맷 순차 실행 (하위 호환)
+   * @deprecated steps[] 포맷은 더 이상 사용하지 않습니다. nodes+edges 포맷으로 마이그레이션하세요.
+   *   향후 버전에서 제거될 예정입니다.
    */
   async executeLegacyFlow(flow, initialVariables = {}) {
+    console.warn(
+      `[executor] 레거시 steps[] 포맷으로 실행 중 (flow id=${flow.id ?? "?"}, uuid=${flow.uuid ?? "?"}). ` +
+      `이 포맷은 deprecated되었으며 향후 제거됩니다. nodes+edges 포맷으로 전환하세요.`
+    );
     this.variables = {
       ...(
         flow.config.steps.find((s) => s.type === "start")?.config?.variables ||
