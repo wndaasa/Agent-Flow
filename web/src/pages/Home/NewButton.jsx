@@ -36,12 +36,12 @@ export default function NewButton() {
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150"
         style={{
-          background: open ? "#e8eaf0" : "#ffffff",
-          color: "#13151c",
-          boxShadow: "0 1px 8px rgba(0,0,0,0.4)",
+          background: open ? "#5254cc" : "#6366f1",
+          color: "#ffffff",
+          boxShadow: "0 1px 8px rgba(99,102,241,0.5)",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "#e8eaf0")}
-        onMouseLeave={(e) => (e.currentTarget.style.background = open ? "#e8eaf0" : "#ffffff")}
+        onMouseEnter={(e) => (e.currentTarget.style.background = "#5254cc")}
+        onMouseLeave={(e) => (e.currentTarget.style.background = open ? "#5254cc" : "#6366f1")}
       >
         <Plus className="w-3.5 h-3.5" weight="bold" />
         New
