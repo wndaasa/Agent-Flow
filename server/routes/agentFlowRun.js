@@ -195,7 +195,9 @@ function registerAgentFlowRunRoutes(app) {
         let extractedText = buf.toString("utf8");
         try {
           fs.unlinkSync(req.file.path);
-        } catch (_) {}
+        } catch (unlinkErr) {
+          console.error("[input-file] 임시 파일 삭제 실패:", req.file.path, unlinkErr.message);
+        }
 
         if (!extractedText.trim()) {
           return res.status(500).json({
