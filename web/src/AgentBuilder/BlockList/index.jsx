@@ -113,7 +113,7 @@ const BLOCK_INFO = {
   },
   */
   [BLOCK_TYPES.LLM_INSTRUCTION]: {
-    label: "LLM Instruction",
+    label: "Generate",
     icon: <Brain className="w-5 h-5 text-theme-text-primary" />,
     description: "Process data using LLM instructions",
     defaultConfig: {

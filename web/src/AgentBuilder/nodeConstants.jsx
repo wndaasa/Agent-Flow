@@ -67,7 +67,7 @@ export const NODE_INFO = {
   },
 
   [NODE_TYPES_MAP.llmInstruction]: {
-    label: "LLM Instruction",
+    label: "Generate",
     icon: <Brain className="w-4 h-4" />,
     description: "LLM으로 데이터 처리",
     defaultData: {
