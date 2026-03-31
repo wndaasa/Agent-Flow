@@ -175,8 +175,8 @@ export default function ApiCallPanel({ id, data = {} }) {
         <input
           type="text"
           placeholder="미지정 시 자동 생성"
-          value={data.responseVariable || ""}
-          onChange={(e) => update({ responseVariable: e.target.value })}
+          value={data.resultVariable || ""}
+          onChange={(e) => update({ resultVariable: e.target.value })}
           className="panel-input"
           autoComplete="off"
           spellCheck={false}

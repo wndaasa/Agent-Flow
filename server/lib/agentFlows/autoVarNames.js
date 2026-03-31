@@ -22,4 +22,9 @@ function autoCodeVarName(nodeId) {
   return `code_${tail.slice(-AUTO_VAR_NAME_LENGTH)}`;
 }
 
-module.exports = { autoVarName, autoLlmVarName, autoCodeVarName };
+function autoApiVarName(nodeId) {
+  const tail = (nodeId || "api").split("_").pop();
+  return `api_${tail.slice(-AUTO_VAR_NAME_LENGTH)}`;
+}
+
+module.exports = { autoVarName, autoLlmVarName, autoCodeVarName, autoApiVarName };

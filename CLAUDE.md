@@ -117,8 +117,8 @@ agent-flow/
 | Set Variable | `setVariable` | 변수 설정·변환 |
 | Code | `code` | JavaScript 실행 |
 | Output | `output` | 최종 출력 (directOutput) |
-| API Call | `apiCall` | HTTP 요청 (executor만 있음, 노드 UI 미완성) |
-| Web Scraping | `webScraping` | 웹 콘텐츠 수집 (executor만 있음, 노드 UI 미완성) |
+| API Call | `apiCall` | HTTP 요청 |
+| Web Scraping | `webScraping` | 웹 콘텐츠 수집 |
 
 ## 새 노드 추가 체크리스트
 
@@ -144,6 +144,11 @@ feat/   ← 큰 기능 작업 시 dev에서 분기 → dev로 머지
 fix/    ← 버그 수정
 chore/  ← 설정·의존성·리팩토링
 ```
+
+### 이슈 관리
+- 버그 수정이나 기능 추가 전에 GitHub 이슈를 먼저 생성한다
+- 커밋 메시지에 `Closes #이슈번호`를 붙여 자동으로 닫는다
+- 작업 완료 후 이슈가 자동으로 닫히지 않은 경우 `gh issue close`로 직접 닫는다
 
 ### 커밋 타이밍
 - 작업 단위가 완결되면 커밋한다 (파일 저장할 때마다 X, 기능/수정이 완성됐을 때 O)

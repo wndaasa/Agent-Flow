@@ -5,7 +5,8 @@
  */
 async function executeSetVariable(config, context) {
   const { variableName, value = "" } = config;
-  if (variableName) context.variables[variableName] = value;
+  if (!variableName) throw new Error("Set Variable 노드: variableName이 지정되지 않았습니다.");
+  context.variables[variableName] = value;
   return value;
 }
 

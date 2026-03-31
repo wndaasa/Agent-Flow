@@ -389,7 +389,7 @@ export default function SettingsPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs" style={{ color: "var(--af-text-secondary)" }}>버전</span>
-                  <span className="text-xs font-mono" style={{ color: "var(--af-text-muted)" }}>v0.4.0</span>
+                  <span className="text-xs font-mono" style={{ color: "var(--af-text-muted)" }}>v0.4.1</span>
                 </div>
                 <div
                   className="flex items-center justify-between pt-3"
