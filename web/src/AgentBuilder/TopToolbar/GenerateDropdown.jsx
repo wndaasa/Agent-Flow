@@ -33,7 +33,7 @@ async function fetchDynamicGroups() {
           id: `${dp.provider}-${m.id}`,
           label: m.id,
           description: `${dp.label} 로컬 모델`,
-          nodeType: "llmInstruction",
+          nodeType: "generate",
           defaultData: { provider: dp.provider, model: m.id },
         })),
       });

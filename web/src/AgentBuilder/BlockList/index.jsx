@@ -17,7 +17,7 @@ import ApiCallNode from "../nodes/ApiCallNode";
 import WebsiteNode from "../nodes/WebsiteNode";
 import FileNode from "../nodes/FileNode";
 import CodeNode from "../nodes/CodeNode";
-import LLMInstructionNode from "../nodes/LLMInstructionNode";
+import GenerateNode from "../nodes/GenerateNode";
 import FinishNode from "../nodes/FinishNode";
 import WebScrapingNode from "../nodes/WebScrapingNode";
 import FlowInfoNode from "../nodes/FlowInfoNode";
@@ -30,7 +30,7 @@ const BLOCK_TYPES = {
   // WEBSITE: "website", // Temporarily disabled
   // FILE: "file", // Temporarily disabled
   // CODE: "code", // Temporarily disabled
-  LLM_INSTRUCTION: "llmInstruction",
+  GENERATE: "generate",
   WEB_SCRAPING: "webScraping",
   FINISH: "finish",
 };
@@ -112,7 +112,7 @@ const BLOCK_INFO = {
     getSummary: (config) => `Run ${config.language || "javascript"} code`,
   },
   */
-  [BLOCK_TYPES.LLM_INSTRUCTION]: {
+  [BLOCK_TYPES.GENERATE]: {
     label: "Generate",
     icon: <Brain className="w-5 h-5 text-theme-text-primary" />,
     description: "Process data using LLM instructions",
@@ -210,8 +210,8 @@ export default function BlockList({
         return <FileNode {...props} />;
       case BLOCK_TYPES.CODE:
         return <CodeNode {...props} />;
-      case BLOCK_TYPES.LLM_INSTRUCTION:
-        return <LLMInstructionNode {...props} />;
+      case BLOCK_TYPES.GENERATE:
+        return <GenerateNode {...props} />;
       case BLOCK_TYPES.WEB_SCRAPING:
         return <WebScrapingNode {...props} />;
       case BLOCK_TYPES.FINISH:

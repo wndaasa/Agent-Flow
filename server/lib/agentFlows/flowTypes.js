@@ -76,8 +76,8 @@ const FLOW_TYPES = {
       },
     ],
   },
-  LLM_INSTRUCTION: {
-    type: "llmInstruction",
+  GENERATE: {
+    type: "generate",
     description: "Process data using LLM instructions",
     parameters: {
       instruction: {

@@ -140,7 +140,7 @@ class StreamFlowExecutor extends FlowExecutor {
         result: resultStr,
         duration: Date.now() - startTime,
       };
-      if (type === "llmInstruction" && this._pendingLlmReasoning) {
+      if (type === "generate" && this._pendingLlmReasoning) {
         completeEvent.reasoning = this._pendingLlmReasoning;
       }
       this.onEvent(completeEvent);
@@ -162,11 +162,11 @@ class StreamFlowExecutor extends FlowExecutor {
   _getLabel(step) {
     const data = step.data || step.config || {};
     switch (step.type) {
-      case "llmInstruction":
+      case "generate":
         return data.instruction
           ? data.instruction.slice(0, 40) +
               (data.instruction.length > 40 ? "…" : "")
-          : "LLM Instruction";
+          : "Generate";
       case "setVariable":
         return data.variableName ? `Set: ${data.variableName}` : "Set Variable";
       case "userInput":

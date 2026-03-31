@@ -5,7 +5,7 @@ function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 const executeApiCall = require("./executors/api-call");
-const executeLLMInstruction = require("./executors/llm-instruction");
+const executeGenerate = require("./executors/generate");
 const executeWebScraping = require("./executors/web-scraping");
 const executeUserInput = require("./executors/user-input");
 const executeSetVariable = require("./executors/set-variable");
@@ -194,8 +194,8 @@ class FlowExecutor {
       case FLOW_TYPES.API_CALL.type:
         result = await executeApiCall(config, context);
         break;
-      case FLOW_TYPES.LLM_INSTRUCTION.type: {
-        const llmOut = await executeLLMInstruction(config, context);
+      case FLOW_TYPES.GENERATE.type: {
+        const llmOut = await executeGenerate(config, context);
         result = llmOut.value;
         this._pendingLlmReasoning = llmOut.reasoning || null;
         break;
@@ -222,7 +222,7 @@ class FlowExecutor {
     }
 
     // LLM 결과: resultVariable 미지정 시 노드 ID 기반 자동 변수명으로 저장
-    if (type === FLOW_TYPES.LLM_INSTRUCTION.type) {
+    if (type === FLOW_TYPES.GENERATE.type) {
       const varName = config.resultVariable || autoLlmVarName(step.id);
       this.variables[varName] = result;
     } else if (type === FLOW_TYPES.CODE.type) {
@@ -299,7 +299,7 @@ class FlowExecutor {
     // 노드 타입별 기본 레이블 (프론트 NODE_INFO.label과 동일하게 유지)
     const DEFAULT_NODE_LABELS = {
       userInput: "User Input",
-      llmInstruction: "LLM Instruction",
+      generate: "Generate",
       setVariable: "Set Variable",
       code: "Code",
     };
@@ -312,7 +312,7 @@ class FlowExecutor {
       if (!label) continue;
       if (node.type === "userInput") {
         this._labelToVar[label] = autoVarName(node.id);
-      } else if (node.type === "llmInstruction") {
+      } else if (node.type === "generate") {
         this._labelToVar[label] =
           node.data?.resultVariable || autoLlmVarName(node.id);
       } else if (node.type === "code") {

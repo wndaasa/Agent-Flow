@@ -33,7 +33,7 @@ export const STATIC_GROUPS = [
         id: "agent",
         label: "Agent",
         description: "시스템 기본 모델을 자동으로 사용합니다",
-        nodeType: "llmInstruction",
+        nodeType: "generate",
         defaultData: { model: "" },
       },
     ],
@@ -48,14 +48,14 @@ export const STATIC_GROUPS = [
         id: "claude-opus",
         label: "claude-opus-4-6",
         description: "가장 강력한 Claude 모델",
-        nodeType: "llmInstruction",
+        nodeType: "generate",
         defaultData: { provider: "anthropic", model: "claude-opus-4-6" },
       },
       {
         id: "claude-sonnet",
         label: "claude-sonnet-4-6",
         description: "속도와 성능의 최적 균형",
-        nodeType: "llmInstruction",
+        nodeType: "generate",
         defaultData: { provider: "anthropic", model: "claude-sonnet-4-6" },
       },
     ],
@@ -70,7 +70,7 @@ export const STATIC_GROUPS = [
         id: "openai-gpt-4o",
         label: "gpt-4o",
         description: "실시간으로 오디오, 시각, 텍스트를 추론할 수 있는 새로운 플래그십 모델",
-        nodeType: "llmInstruction",
+        nodeType: "generate",
         defaultData: { provider: "openai", model: "gpt-4o" }, 
       },
     ],
@@ -90,7 +90,7 @@ export const DYNAMIC_PROVIDERS = [
   { provider: "ollama", groupId: "ollama", label: "Ollama" },
 ];
 
-/* ── LLM Instruction 패널(고급 옵션) — Generate 레지스트리와 동일 소스 ───────── */
+/* ── Generate 패널(고급 옵션) — Generate 레지스트리와 동일 소스 ───────── */
 
 const PROVIDER_LABEL_FALLBACK = {
   "": "시스템 기본값 사용",
@@ -102,13 +102,13 @@ const PROVIDER_LABEL_FALLBACK = {
 const PROVIDER_ORDER = ["", "anthropic", "openai", "ollama"];
 
 /**
- * Generate STATIC_GROUPS 에서 llmInstruction 프리셋만 추출 (provider / model 정렬용)
+ * Generate STATIC_GROUPS 에서 generate 프리셋만 추출 (provider / model 정렬용)
  */
 export function getStaticLlmPresets() {
   const out = [];
   for (const group of STATIC_GROUPS) {
     for (const item of group.items) {
-      if (item.nodeType !== "llmInstruction") continue;
+      if (item.nodeType !== "generate") continue;
       const dd = item.defaultData || {};
       out.push({
         id: item.id,

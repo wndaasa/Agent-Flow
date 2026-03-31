@@ -6,11 +6,11 @@ const { runAgentFlowLlmCompletion } = require("../llmOpenAiCompat");
  * @param {{introspect: Function, logger: Function, nodeId?: string, emitAgentStream?: Function}} context Execution context
  * @returns {Promise<{ value: string, reasoning: string | null }>} 본문(value)과 추론 텍스트(없으면 null)
  */
-async function executeLLMInstruction(config, context) {
+async function executeGenerate(config, context) {
   const { instruction, systemPrompt, provider, model, resultVariable } = config;
   const { introspect, logger, aibitat, nodeId, emitAgentStream } = context;
   logger(
-    `\x1b[43m[AgentFlowToolExecutor]\x1b[0m - LLM Instruction 블록 실행 중`
+    `\x1b[43m[AgentFlowToolExecutor]\x1b[0m - Generate 블록 실행 중`
   );
   introspect(`LLM 명령 처리 중...`);
 
@@ -66,4 +66,4 @@ async function executeLLMInstruction(config, context) {
   }
 }
 
-module.exports = executeLLMInstruction;
+module.exports = executeGenerate;

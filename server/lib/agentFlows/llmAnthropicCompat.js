@@ -21,7 +21,7 @@ function extendedThinkingEnabled() {
 }
 
 /**
- * llm-instruction 이 넘기는 OpenAI 스타일 messages → [system 문자열, Anthropic messages]
+ * generate 이 넘기는 OpenAI 스타일 messages → [system 문자열, Anthropic messages]
  */
 function prepareAnthropicMessages(messages) {
   let systemPrompt =
