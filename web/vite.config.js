@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     port: 5175,
     host: "0.0.0.0",
+    proxy: {
+      "/api": "http://localhost:3001",
+    },
   },
   resolve: {
     alias: {
