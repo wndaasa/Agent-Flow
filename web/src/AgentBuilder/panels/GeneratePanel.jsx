@@ -11,13 +11,13 @@ import {
 import { fetchCustomModelsForProvider } from "../registries/dynamicModels";
 
 /**
- * LLMInstructionPanel — LLM Instruction 노드의 우측 패널 편집 폼
+ * GeneratePanel — Generate 노드의 우측 패널 편집 폼
  *
  * Props:
  *   id   : 노드 ID
  *   data : 노드 data 객체
  */
-export default function LLMInstructionPanel({ id, data = {} }) {
+export default function GeneratePanel({ id, data = {} }) {
   const { onDataChange, availableMentions, onMentionUsed } = useFlowContext();
   // 시스템 프롬프트 또는 모델 설정이 있으면 고급 옵션 기본 펼침
   const [showAdvanced, setShowAdvanced] = useState(

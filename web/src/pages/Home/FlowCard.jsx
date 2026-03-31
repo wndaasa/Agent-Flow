@@ -70,9 +70,9 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
     <div
       className="relative cursor-pointer rounded-xl transition-all duration-200 overflow-hidden"
       style={{
-        background: hovered ? "#1e2229" : "#1a1d27",
-        border: `1px solid ${hovered ? "rgba(99,102,241,0.35)" : "rgba(255,255,255,0.07)"}`,
-        boxShadow: hovered ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
+        background: hovered ? "var(--af-card-hover-bg)" : "var(--af-card-bg)",
+        border: `1px solid ${hovered ? "rgba(99,102,241,0.35)" : "var(--af-border)"}`,
+        boxShadow: hovered ? "0 4px 20px rgba(0,0,0,0.12)" : "none",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -88,16 +88,16 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
           className="absolute top-3.5 right-3.5 w-6 h-6 flex items-center justify-center rounded-md transition-all"
           style={{
             opacity: hovered ? 1 : 0,
-            background: "rgba(255,255,255,0.05)",
-            color: "#7b7f8e",
+            background: "var(--af-hover-bg)",
+            color: "var(--af-text-secondary)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(239,68,68,0.15)";
+            e.currentTarget.style.background = "rgba(239,68,68,0.12)";
             e.currentTarget.style.color = "#ef4444";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-            e.currentTarget.style.color = "#7b7f8e";
+            e.currentTarget.style.background = "var(--af-hover-bg)";
+            e.currentTarget.style.color = "var(--af-text-secondary)";
           }}
         >
           <X className="w-3 h-3" weight="bold" />
@@ -105,10 +105,10 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
 
         {/* 이름 + 메타 */}
         <div className="mb-4 pr-6">
-          <p className="text-sm font-semibold truncate leading-snug mb-1" style={{ color: "#e8eaf0" }}>
+          <p className="text-sm font-semibold truncate leading-snug mb-1" style={{ color: "var(--af-text-primary)" }}>
             {flow.name}
           </p>
-          <p className="text-[11px]" style={{ color: "#4a4f5c" }}>
+          <p className="text-[11px]" style={{ color: "var(--af-text-muted)" }}>
             노드 {nodeCount}개
             {updatedText && <span> · {updatedText}</span>}
           </p>
@@ -117,15 +117,15 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
         {/* 푸터 */}
         <div
           className="flex items-center justify-between pt-3"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+          style={{ borderTop: "1px solid var(--af-border-subtle)" }}
         >
           {/* 활성 토글 */}
           <button
             onClick={handleToggle}
             className="flex items-center gap-1.5 text-[11px] transition-colors"
-            style={{ color: active ? "#6366f1" : "#4a4f5c" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = active ? "#818cf8" : "#7b7f8e")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = active ? "#6366f1" : "#4a4f5c")}
+            style={{ color: active ? "#6366f1" : "var(--af-text-muted)" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = active ? "#818cf8" : "var(--af-text-secondary)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = active ? "#6366f1" : "var(--af-text-muted)")}
           >
             <Circle className="w-2 h-2" weight={active ? "fill" : "regular"} />
             {active ? "활성" : "비활성"}
@@ -139,15 +139,19 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
             <button
               onClick={goEdit}
               className="flex items-center gap-1 px-2.5 py-1 text-[11px] rounded-md transition-all"
-              style={{ color: "#7b7f8e", border: "1px solid rgba(255,255,255,0.08)", background: "transparent" }}
+              style={{
+                color: "var(--af-text-secondary)",
+                border: "1px solid var(--af-border-input)",
+                background: "transparent",
+              }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#e8eaf0";
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
-                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                e.currentTarget.style.color = "var(--af-text-primary)";
+                e.currentTarget.style.borderColor = "rgba(99,102,241,0.4)";
+                e.currentTarget.style.background = "var(--af-hover-bg)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#7b7f8e";
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                e.currentTarget.style.color = "var(--af-text-secondary)";
+                e.currentTarget.style.borderColor = "var(--af-border-input)";
                 e.currentTarget.style.background = "transparent";
               }}
             >
@@ -160,15 +164,19 @@ export default function FlowCard({ flow, onDelete, onToggleActive }) {
                 navigate(paths.agents.editAgent(flow.uuid) + "?run=1");
               }}
               className="flex items-center gap-1 px-2.5 py-1 text-[11px] rounded-md transition-all"
-              style={{ color: "#7b7f8e", border: "1px solid rgba(255,255,255,0.08)", background: "transparent" }}
+              style={{
+                color: "var(--af-text-secondary)",
+                border: "1px solid var(--af-border-input)",
+                background: "transparent",
+              }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#e8eaf0";
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
-                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                e.currentTarget.style.color = "var(--af-text-primary)";
+                e.currentTarget.style.borderColor = "rgba(99,102,241,0.4)";
+                e.currentTarget.style.background = "var(--af-hover-bg)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#7b7f8e";
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                e.currentTarget.style.color = "var(--af-text-secondary)";
+                e.currentTarget.style.borderColor = "var(--af-border-input)";
                 e.currentTarget.style.background = "transparent";
               }}
             >

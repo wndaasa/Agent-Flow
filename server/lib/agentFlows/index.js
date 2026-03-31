@@ -89,6 +89,8 @@ class AgentFlows {
             uuid: row.uuid,
             description: config.description,
             active: row.active,
+            updatedAt: row.updatedAt,
+            config,
           });
         } catch (e) {
           console.warn(

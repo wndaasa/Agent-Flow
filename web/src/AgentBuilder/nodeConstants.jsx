@@ -13,7 +13,7 @@ import {
 export const NODE_TYPES_MAP = {
   start: "start",
   userInput: "userInput",
-  llmInstruction: "llmInstruction",
+  generate: "generate",
   setVariable: "setVariable",
   code: "code",
   output: "output",
@@ -66,8 +66,8 @@ export const NODE_INFO = {
     previewText: (data) => data.prompt?.trim() || null,
   },
 
-  [NODE_TYPES_MAP.llmInstruction]: {
-    label: "LLM Instruction",
+  [NODE_TYPES_MAP.generate]: {
+    label: "Generate",
     icon: <Brain className="w-4 h-4" />,
     description: "LLM으로 데이터 처리",
     defaultData: {
@@ -157,7 +157,7 @@ export const NODE_INFO = {
  */
 export const DRAGGABLE_NODE_TYPES = [
   NODE_TYPES_MAP.userInput,
-  NODE_TYPES_MAP.llmInstruction,
+  NODE_TYPES_MAP.generate,
   NODE_TYPES_MAP.setVariable,
   NODE_TYPES_MAP.apiCall,
   NODE_TYPES_MAP.webScraping,

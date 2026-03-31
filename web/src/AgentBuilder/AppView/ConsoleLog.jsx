@@ -13,7 +13,7 @@ import {
 import { NODE_INFO } from "../nodeConstants.jsx";
 
 const NODE_ICONS = {
-  llmInstruction: Brain,
+  generate: Brain,
   setVariable: Tag,
   userInput: ChatDots,
   start: ChatDots,
@@ -92,7 +92,7 @@ function LogEntry({ entry }) {
   const color = NODE_INFO[entry.nodeType]?.color || "#6b7280";
   const IconCmp = NODE_ICONS[entry.nodeType] || FileText;
   const running = entry.status === "running";
-  const isLlm = entry.nodeType === "llmInstruction";
+  const isLlm = entry.nodeType === "generate";
 
   const [expanded, setExpanded] = useState(() => running || entry.status === "waiting_input");
 

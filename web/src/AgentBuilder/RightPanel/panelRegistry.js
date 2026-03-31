@@ -9,7 +9,7 @@
  */
 import StartPanel from "../panels/StartPanel";
 import UserInputPanel from "../panels/UserInputPanel";
-import LLMInstructionPanel from "../panels/LLMInstructionPanel";
+import GeneratePanel from "../panels/GeneratePanel";
 import SetVariablePanel from "../panels/SetVariablePanel";
 import CodePanel from "../panels/CodePanel";
 import OutputPanel from "../panels/OutputPanel";
@@ -19,7 +19,7 @@ import WebScrapingPanel from "../panels/WebScrapingPanel";
 export const PANEL_REGISTRY = {
   start: StartPanel,
   userInput: UserInputPanel,
-  llmInstruction: LLMInstructionPanel,
+  generate: GeneratePanel,
   setVariable: SetVariablePanel,
   code: CodePanel,
   output: OutputPanel,

@@ -34,7 +34,7 @@ import RightPanel   from "./RightPanel";
 
 import StartNode          from "./nodes/StartNode";
 import UserInputNode      from "./nodes/UserInputNode";
-import LLMInstructionNode from "./nodes/LLMInstructionNode";
+import GenerateNode from "./nodes/GenerateNode";
 import SetVariableNode    from "./nodes/SetVariableNode";
 import CodeNode           from "./nodes/CodeNode";
 import OutputNode         from "./nodes/OutputNode";
@@ -111,7 +111,7 @@ function isInvalidConnection(params, nodeMap) {
 const NODE_TYPES = {
   start:          StartNode,
   userInput:      UserInputNode,
-  llmInstruction: LLMInstructionNode,
+  generate: GenerateNode,
   setVariable:    SetVariableNode,
   code:           CodeNode,
   output:         OutputNode,
@@ -153,7 +153,7 @@ function normalizeNodesForEditor(rawNodes) {
 /** 노드 타입별 @멘션 참조 필드 정의 */
 const MENTION_FIELDS_BY_TYPE = {
   userInput: ["prompt"],
-  llmInstruction: ["instruction", "systemPrompt"],
+  generate: ["instruction", "systemPrompt"],
   setVariable: ["value"],
   code: ["code"],
   output: ["template"],
@@ -603,7 +603,7 @@ export default function AgentBuilder() {
           return [{ label, varName: "output", nodeId: n.id }];
         if (n.type === "userInput")
           return [{ label, varName: autoVarName(n.id), nodeId: n.id }];
-        if (n.type === "llmInstruction")
+        if (n.type === "generate")
           return [{ label, varName: n.data?.resultVariable || autoLlmVarName(n.id), nodeId: n.id }];
         if (n.type === "code") {
           // Code 노드: outputKeys가 지정되어 있으면 subProps로 전달
@@ -711,7 +711,7 @@ export default function AgentBuilder() {
         );
         const sourceLabel = sourceNode.data?.title?.trim() || NODE_INFO[sourceNode.type]?.label;
         if (acceptsMention && sourceLabel) {
-          const fieldKey = targetNode.type === "llmInstruction" ? "instruction" : "code";
+          const fieldKey = targetNode.type === "generate" ? "instruction" : "code";
           const currentText = targetNode.data?.[fieldKey] || "";
           const mentionTag = `@${sourceLabel}`;
           // 이미 포함되어 있으면 중복 삽입하지 않음

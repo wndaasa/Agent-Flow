@@ -2,7 +2,7 @@ const OpenAI = require("openai");
 const Anthropic = require("@anthropic-ai/sdk");
 
 /**
- * Agent Flow LLMInstruction 전용 최소 어댑터.
+ * Agent Flow Generate 전용 최소 어댑터.
  * OpenAI(기본) / Anthropic / Ollama 지원.
  */
 class MinimalAibitat {
