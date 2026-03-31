@@ -209,21 +209,26 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    const payload = {
-      llmProvider:    provider,
-      openAiModel,
-      ollamaBasePath: ollamaUrl,
-      ollamaModel,
-    };
-    if (openAiKey && !openAiKey.includes("•")) payload.openAiKey = openAiKey;
-    if (anthropicKey && !anthropicKey.includes("•")) payload.anthropicKey = anthropicKey;
+    try {
+      const payload = {
+        llmProvider:    provider,
+        openAiModel,
+        ollamaBasePath: ollamaUrl,
+        ollamaModel,
+      };
+      if (openAiKey && !openAiKey.includes("•")) payload.openAiKey = openAiKey;
+      if (anthropicKey && !anthropicKey.includes("•")) payload.anthropicKey = anthropicKey;
 
-    const res = await Settings.save(payload);
-    setSaving(false);
-    if (res.success) {
-      showToast("설정이 저장되었습니다.", "success");
-    } else {
-      showToast("저장 실패: " + res.error, "error");
+      const res = await Settings.save(payload);
+      if (res.success) {
+        showToast("설정이 저장되었습니다.", "success");
+      } else {
+        showToast("저장 실패: " + (res.error ?? "알 수 없는 오류"), "error");
+      }
+    } catch (e) {
+      showToast("저장 실패: 서버에 연결할 수 없어요.", "error");
+    } finally {
+      setSaving(false);
     }
   };
 
