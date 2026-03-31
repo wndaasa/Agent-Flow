@@ -117,8 +117,8 @@ agent-flow/
 | Set Variable | `setVariable` | 변수 설정·변환 |
 | Code | `code` | JavaScript 실행 |
 | Output | `output` | 최종 출력 (directOutput) |
-| API Call | `apiCall` | HTTP 요청 (executor만 있음, 노드 UI 미완성) |
-| Web Scraping | `webScraping` | 웹 콘텐츠 수집 (executor만 있음, 노드 UI 미완성) |
+| API Call | `apiCall` | HTTP 요청 |
+| Web Scraping | `webScraping` | 웹 콘텐츠 수집 |
 
 ## 새 노드 추가 체크리스트
 

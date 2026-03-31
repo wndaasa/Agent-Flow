@@ -21,3 +21,8 @@ export function autoCodeVarName(nodeId) {
   const tail = (nodeId || "code").split("_").pop();
   return `code_${tail.slice(-AUTO_VAR_NAME_LENGTH)}`;
 }
+
+export function autoApiVarName(nodeId) {
+  const tail = (nodeId || "api").split("_").pop();
+  return `api_${tail.slice(-AUTO_VAR_NAME_LENGTH)}`;
+}

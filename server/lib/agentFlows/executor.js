@@ -1,5 +1,5 @@
 const { FLOW_TYPES } = require("./flowTypes");
-const { autoVarName, autoLlmVarName, autoCodeVarName } = require("./autoVarNames");
+const { autoVarName, autoLlmVarName, autoCodeVarName, autoApiVarName } = require("./autoVarNames");
 
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -221,12 +221,15 @@ class FlowExecutor {
         throw new Error(`Unknown flow type: ${type}`);
     }
 
-    // LLM 결과: resultVariable 미지정 시 노드 ID 기반 자동 변수명으로 저장
+    // 결과 변수 저장: resultVariable 미지정 시 노드 ID 기반 자동 변수명으로 저장
     if (type === FLOW_TYPES.GENERATE.type) {
       const varName = config.resultVariable || autoLlmVarName(step.id);
       this.variables[varName] = result;
     } else if (type === FLOW_TYPES.CODE.type) {
       const varName = config.resultVariable || autoCodeVarName(step.id);
+      this.variables[varName] = result;
+    } else if (type === FLOW_TYPES.API_CALL.type) {
+      const varName = config.resultVariable || autoApiVarName(step.id);
       this.variables[varName] = result;
     } else if (config.resultVariable) {
       this.variables[config.resultVariable] = result;
@@ -318,6 +321,9 @@ class FlowExecutor {
       } else if (node.type === "code") {
         this._labelToVar[label] =
           node.data?.resultVariable || autoCodeVarName(node.id);
+      } else if (node.type === "apiCall") {
+        this._labelToVar[label] =
+          node.data?.resultVariable || autoApiVarName(node.id);
       } else if (node.data?.variableName) {
         this._labelToVar[label] = node.data.variableName;
       }

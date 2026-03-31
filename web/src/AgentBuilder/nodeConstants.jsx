@@ -129,7 +129,7 @@ export const NODE_INFO = {
       headers: [],
       body: "",
       bodyType: "json",
-      responseVariable: "",
+      resultVariable: "",
     },
     color: "#f97316", // orange
     previewText: (data) => data.url?.trim() || null,
