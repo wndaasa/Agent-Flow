@@ -2,7 +2,7 @@
 
 이 파일은 Claude가 이 프로젝트를 이해하고 작업하기 위한 컨텍스트 문서입니다.
 
-**중요:** 작업 중 새로 알게 된 사실(경로, 컨벤션, 주의사항 등)이 생기면 즉시 이 파일을 업데이트한다. 다음 대화에서도 컨텍스트가 유지되도록 하는 것이 목적이다.
+**중요:** 작업 중 새로 알게 된 사실(경로, 컨벤션, 주의사항 등), 업데이트 해야하는 사항이 생기면 즉시 이 파일을 업데이트한다. 다음 대화에서도 컨텍스트가 유지되도록 하는 것이 목적이다.
 
 코드 작성 시에는 추후 새로 추가되는 기능들을 고려하여 반드시 확장성 있게 구현해야 하며, 왠만하면 하드 코딩은 하지않고, 동적으로 조절 가능하게 할 것.
 
@@ -48,7 +48,7 @@ agent-flow/
 │           ├── llmAnthropicCompat.js
 │           ├── splitLlmReasoning.js
 │           └── executors/          # 노드 타입별 실행 로직
-│               ├── llm-instruction.js
+│               ├── generate.js
 │               ├── code.js
 │               ├── api-call.js
 │               ├── web-scraping.js
@@ -81,7 +81,11 @@ agent-flow/
         │   └── AddBlockMenu/
         ├── models/
         │   └── agentFlows.js       # 프론트 API 클라이언트
+        ├── pages/
+        │   ├── Home/           # 홈 페이지 (Sidebar, FlowCard, NewButton)
+        │   └── Settings/       # 설정 페이지 (LLM, 테마)
         └── utils/
+            └── theme.js        # 테마 유틸 — THEMES 레지스트리, getTheme/setTheme/applyTheme
 ```
 
 ## 플로우 실행 모델
@@ -109,7 +113,7 @@ agent-flow/
 |------|------------|------|
 | Start | `start` | 변수 초기화 |
 | User Input | `userInput` | 런타임 사용자 입력 |
-| LLM Instruction | `llmInstruction` | LLM 호출 |
+| Generate | `generate` | LLM 호출 (구 `llmInstruction`) |
 | Set Variable | `setVariable` | 변수 설정·변환 |
 | Code | `code` | JavaScript 실행 |
 | Output | `output` | 최종 출력 (directOutput) |
@@ -172,12 +176,14 @@ chore: CLAUDE.md git 관리 지침 추가
 - 소소한 수정은 `dev`에 직접 커밋
 - 한 세션에서 큰 기능을 만들 때는 `feat/기능명` 브랜치를 따서 작업 후 `dev`로 머지
 - `main` 머지는 사용자가 "배포 가능 수준"이라고 판단할 때만, 반드시 버전 태그 붙이기
+- **main 머지 전 반드시 확인**: `git log main..dev --oneline`으로 dev에 남은 커밋 전부 확인 후 머지. 버전 표기(Settings 페이지 등) 포함 모든 변경이 반영됐는지 체크할 것
 - 작업 브랜치는 dev 머지 후 로컬 삭제 (`git branch -d`). remote push 한 경우 remote도 삭제 (`git push origin --delete <branch>`)
 
 ### 릴리즈 태그
 - Semantic Versioning: `v주.부.수`
-- 현재 버전: `v0.1.0` (초기 개발 중)
-- main 머지 시: `git tag v0.x.x -m "설명"` + `git push origin v0.x.x`
+- 현재 버전: `v0.4.0`
+- main 머지 시: `git tag v0.x.x -m "설명"` + `git push origin main && git push origin v0.x.x`
+- 버전 올릴 때 `web/src/pages/Settings/index.jsx`의 버전 표기도 함께 업데이트할 것
 
 ## 환경 변수 (`server/.env`)
 
@@ -191,12 +197,8 @@ OPEN_AI_MODEL_PREF=gpt-4o
 
 ## 도구 경로
 
-bash 세션에서 PATH가 제한되므로 아래 툴은 풀 경로로 실행해야 함:
-
-```bash
-# GitHub CLI
-"/c/Program Files/GitHub CLI/gh.exe" <command>
-```
+GitHub CLI는 `/usr/bin/gh`로 직접 사용 가능 (`gh <command>`).
+풀 경로(`"/c/Program Files/GitHub CLI/gh.exe"`) 불필요.
 
 ## 개발 명령어
 
@@ -210,6 +212,20 @@ npm run build --prefix web           # 프론트 프로덕션 빌드
 - 프론트: http://localhost:5175
 - API: http://localhost:3001
 - 헬스체크: GET /api/health
+
+## 테마 시스템
+
+- **유틸**: `web/src/utils/theme.js` — `THEMES` 레지스트리, `getTheme` / `setTheme` / `applyTheme`
+- **저장**: `localStorage` (`af-theme` 키), 기본값 `light`
+- **적용**: `<html data-theme="light|dark">` 속성으로 CSS 변수 전환
+- **새 테마 추가 방법**:
+  1. `theme.js`의 `THEMES`에 `{ id, label }` 추가
+  2. `index.css`에 `[data-theme="<id>"] { --af-*: ...; }` 블록 추가
+  — Settings 페이지 테마 피커는 `THEMES`를 자동 순회하므로 별도 코드 수정 불필요
+
+### CSS 변수 네임스페이스
+홈·Settings 등 앱 셸 UI는 `--af-*` 변수를 사용한다 (기존 `--theme-*`와 충돌 방지).
+주요 변수: `--af-page-bg`, `--af-sidebar-bg`, `--af-card-bg`, `--af-border`, `--af-text-primary`, `--af-text-secondary`, `--af-text-muted`, `--af-input-bg`, `--af-hover-bg`, `--af-active-bg`, `--af-dropdown-bg`
 
 ## 공통 스타일 유틸 (web/src/index.css)
 
