@@ -192,18 +192,19 @@ export default function SettingsPage() {
   const [ollamaModel, setOllamaModel]         = useState("");
 
   useEffect(() => {
-    Settings.get().then(({ settings }) => {
-      if (!settings) return;
-      setProvider(settings.llmProvider);
-      setOpenAiKeySet(settings.openAiKeySet);
-      setOpenAiKey(settings.openAiKeyMasked || "");
-      setOpenAiModel(settings.openAiModel);
-      setAnthropicKeySet(settings.anthropicKeySet);
-      setAnthropicKey(settings.anthropicKeyMasked || "");
-      setOllamaUrl(settings.ollamaBasePath);
-      setOllamaModel(settings.ollamaModel);
-      setLoading(false);
-    });
+    Settings.get()
+      .then(({ settings }) => {
+        if (!settings) return;
+        setProvider(settings.llmProvider);
+        setOpenAiKeySet(settings.openAiKeySet);
+        setOpenAiKey(settings.openAiKeyMasked || "");
+        setOpenAiModel(settings.openAiModel);
+        setAnthropicKeySet(settings.anthropicKeySet);
+        setAnthropicKey(settings.anthropicKeyMasked || "");
+        setOllamaUrl(settings.ollamaBasePath);
+        setOllamaModel(settings.ollamaModel);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleSave = async () => {
