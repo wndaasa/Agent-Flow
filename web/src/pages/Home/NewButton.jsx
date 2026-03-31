@@ -55,9 +55,9 @@ export default function NewButton() {
         <div
           className="absolute right-0 top-full mt-1.5 w-44 rounded-xl overflow-hidden z-50 py-1"
           style={{
-            background: "#1a1d27",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
+            background: "var(--af-dropdown-bg)",
+            border: "1px solid var(--af-border-input)",
+            boxShadow: "var(--af-dropdown-shadow)",
           }}
         >
           {MENU_ITEMS.map(({ id, label, available, action }) =>
@@ -69,8 +69,8 @@ export default function NewButton() {
                   setOpen(false);
                 }}
                 className="flex items-center w-full px-4 py-2.5 text-sm transition-colors"
-                style={{ color: "#e8eaf0" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(99,102,241,0.12)")}
+                style={{ color: "var(--af-text-primary)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--af-active-bg)")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
                 {label}
@@ -79,15 +79,15 @@ export default function NewButton() {
               <div
                 key={id}
                 className="flex items-center justify-between w-full px-4 py-2.5 text-sm cursor-not-allowed"
-                style={{ color: "#4a4f5c" }}
+                style={{ color: "var(--af-text-muted)" }}
               >
                 <span>{label}</span>
                 <span
                   className="text-[9px] px-1.5 py-0.5 rounded"
                   style={{
-                    color: "#4a4f5c",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    color: "var(--af-text-muted)",
+                    background: "var(--af-hover-bg)",
+                    border: "1px solid var(--af-border)",
                   }}
                 >
                   Soon

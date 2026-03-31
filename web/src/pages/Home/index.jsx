@@ -7,24 +7,21 @@ import Sidebar from "./Sidebar";
 import FlowCard from "./FlowCard";
 import NewButton from "./NewButton";
 
-const PAGE_BG = "#13151c";
-const HEADER_BORDER = "rgba(255,255,255,0.06)";
-
 // ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
     <div
       className="rounded-xl animate-pulse overflow-hidden"
-      style={{ background: "#1a1d27", border: "1px solid rgba(255,255,255,0.07)" }}
+      style={{ background: "var(--af-card-bg)", border: "1px solid var(--af-border)" }}
     >
-      <div className="h-0.5 w-full" style={{ background: "rgba(255,255,255,0.08)" }} />
+      <div className="h-0.5 w-full" style={{ background: "var(--af-border-input)" }} />
       <div className="p-4">
         <div className="mb-4 space-y-2">
-          <div className="h-3.5 rounded w-2/3" style={{ background: "rgba(255,255,255,0.06)" }} />
-          <div className="h-2.5 rounded w-1/3" style={{ background: "rgba(255,255,255,0.04)" }} />
+          <div className="h-3.5 rounded w-2/3" style={{ background: "var(--af-border-input)" }} />
+          <div className="h-2.5 rounded w-1/3" style={{ background: "var(--af-border)" }} />
         </div>
-        <div className="pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-          <div className="h-2.5 rounded w-1/4" style={{ background: "rgba(255,255,255,0.04)" }} />
+        <div className="pt-3" style={{ borderTop: "1px solid var(--af-border-subtle)" }}>
+          <div className="h-2.5 rounded w-1/4" style={{ background: "var(--af-border)" }} />
         </div>
       </div>
     </div>
@@ -41,10 +38,10 @@ function EmptyState({ onNew }) {
       >
         <Atom className="w-7 h-7" style={{ color: "#6366f1" }} weight="duotone" />
       </div>
-      <p className="text-sm font-semibold mb-1.5" style={{ color: "#e8eaf0" }}>
+      <p className="text-sm font-semibold mb-1.5" style={{ color: "var(--af-text-primary)" }}>
         아직 플로우가 없어요
       </p>
-      <p className="text-xs mb-6" style={{ color: "#4a4f5c" }}>
+      <p className="text-xs mb-6" style={{ color: "var(--af-text-muted)" }}>
         첫 번째 AI 워크플로우를 만들어보세요
       </p>
       <button
@@ -69,10 +66,10 @@ function EmptyState({ onNew }) {
 function NotebooksPlaceholder() {
   return (
     <div className="flex flex-col items-center justify-center flex-1 text-center py-24">
-      <p className="text-sm font-semibold mb-1.5" style={{ color: "#e8eaf0" }}>
+      <p className="text-sm font-semibold mb-1.5" style={{ color: "var(--af-text-primary)" }}>
         Notebooks
       </p>
-      <p className="text-xs" style={{ color: "#4a4f5c" }}>
+      <p className="text-xs" style={{ color: "var(--af-text-muted)" }}>
         곧 출시 예정이에요
       </p>
     </div>
@@ -110,7 +107,7 @@ export default function Home() {
   return (
     <div
       className="flex h-screen w-screen overflow-hidden"
-      style={{ background: PAGE_BG }}
+      style={{ background: "var(--af-page-bg)" }}
     >
       <Sidebar activeSection={section} onSectionChange={setSection} />
 
@@ -118,18 +115,18 @@ export default function Home() {
         {/* ── Top bar ── */}
         <header
           className="flex items-center justify-between px-8 h-14 shrink-0"
-          style={{ borderBottom: `1px solid ${HEADER_BORDER}` }}
+          style={{ borderBottom: "1px solid var(--af-border)" }}
         >
           <div className="flex items-baseline gap-2">
-            <h1 className="text-sm font-semibold" style={{ color: "#e8eaf0" }}>
+            <h1 className="text-sm font-semibold" style={{ color: "var(--af-text-primary)" }}>
               {section === "flows" ? "Flows" : "Notebooks"}
             </h1>
             {section === "flows" && !loading && (
               <span
                 className="text-[11px] px-1.5 py-0.5 rounded"
                 style={{
-                  color: "#4a4f5c",
-                  background: "rgba(255,255,255,0.05)",
+                  color: "var(--af-text-muted)",
+                  background: "var(--af-hover-bg)",
                 }}
               >
                 {flows.length}
@@ -142,7 +139,7 @@ export default function Home() {
             <div className="relative">
               <MagnifyingGlass
                 className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none"
-                style={{ color: "#4a4f5c" }}
+                style={{ color: "var(--af-text-muted)" }}
               />
               <input
                 type="text"
@@ -151,12 +148,12 @@ export default function Home() {
                 onChange={(e) => setSearch(e.target.value)}
                 className="rounded-lg pl-8 pr-3 py-1.5 text-sm outline-none transition-all w-40"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  color: "#e8eaf0",
+                  background: "var(--af-input-bg)",
+                  border: "1px solid var(--af-border-input)",
+                  color: "var(--af-text-primary)",
                 }}
                 onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(99,102,241,0.5)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "var(--af-border-input)")}
               />
             </div>
             <NewButton />
@@ -176,7 +173,7 @@ export default function Home() {
               ) : flows.length === 0 ? (
                 <EmptyState onNew={() => navigate(paths.agents.builder())} />
               ) : filtered.length === 0 ? (
-                <p className="text-sm text-center mt-16" style={{ color: "#4a4f5c" }}>
+                <p className="text-sm text-center mt-16" style={{ color: "var(--af-text-muted)" }}>
                   &quot;{search}&quot;에 해당하는 플로우가 없어요
                 </p>
               ) : (

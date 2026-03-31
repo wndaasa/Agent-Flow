@@ -13,14 +13,14 @@ export default function Sidebar({ activeSection, onSectionChange }) {
     <aside
       className="w-52 shrink-0 flex flex-col h-full"
       style={{
-        background: "#0f1117",
-        borderRight: "1px solid rgba(255,255,255,0.06)",
+        background: "var(--af-sidebar-bg)",
+        borderRight: "1px solid var(--af-border)",
       }}
     >
       {/* Logo */}
       <div
         className="flex items-center gap-2.5 px-5 h-14 shrink-0"
-        style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+        style={{ borderBottom: "1px solid var(--af-border)" }}
       >
         <div
           className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0"
@@ -28,7 +28,7 @@ export default function Sidebar({ activeSection, onSectionChange }) {
         >
           <Atom className="w-3.5 h-3.5 text-white" weight="bold" />
         </div>
-        <span className="font-semibold text-sm tracking-tight" style={{ color: "#e8eaf0" }}>
+        <span className="font-semibold text-sm tracking-tight" style={{ color: "var(--af-text-primary)" }}>
           Agent Flow
         </span>
       </div>
@@ -44,21 +44,27 @@ export default function Sidebar({ activeSection, onSectionChange }) {
               disabled={!available}
               className="flex items-center justify-between px-3 py-2 rounded-lg text-sm w-full text-left transition-all duration-150"
               style={{
-                color: isActive ? "#e8eaf0" : available ? "#7b7f8e" : "#4a4f5c",
-                background: isActive ? "rgba(99,102,241,0.15)" : "transparent",
+                color: isActive
+                  ? "var(--af-text-primary)"
+                  : available
+                  ? "var(--af-text-secondary)"
+                  : "var(--af-text-muted)",
+                background: isActive ? "var(--af-active-bg)" : "transparent",
                 fontWeight: isActive ? 500 : 400,
                 cursor: available ? "pointer" : "not-allowed",
               }}
               onMouseEnter={(e) => {
                 if (!isActive && available) {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                  e.currentTarget.style.color = "#c4c7d4";
+                  e.currentTarget.style.background = "var(--af-hover-bg)";
+                  e.currentTarget.style.color = "var(--af-text-primary)";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isActive) {
                   e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = available ? "#7b7f8e" : "#4a4f5c";
+                  e.currentTarget.style.color = available
+                    ? "var(--af-text-secondary)"
+                    : "var(--af-text-muted)";
                 }
               }}
             >
@@ -74,9 +80,9 @@ export default function Sidebar({ activeSection, onSectionChange }) {
                 <span
                   className="text-[9px] px-1.5 py-0.5 rounded"
                   style={{
-                    color: "#4a4f5c",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    color: "var(--af-text-muted)",
+                    background: "var(--af-hover-bg)",
+                    border: "1px solid var(--af-border)",
                   }}
                 >
                   Soon
@@ -90,19 +96,19 @@ export default function Sidebar({ activeSection, onSectionChange }) {
       {/* Footer */}
       <div
         className="px-3 py-3 shrink-0"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+        style={{ borderTop: "1px solid var(--af-border)" }}
       >
         <button
           onClick={() => navigate(paths.settings())}
           className="flex items-center gap-2.5 px-3 py-2 rounded-lg w-full text-sm transition-all duration-150"
-          style={{ color: "#4a4f5c" }}
+          style={{ color: "var(--af-text-muted)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-            e.currentTarget.style.color = "#7b7f8e";
+            e.currentTarget.style.background = "var(--af-hover-bg)";
+            e.currentTarget.style.color = "var(--af-text-secondary)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "#4a4f5c";
+            e.currentTarget.style.color = "var(--af-text-muted)";
           }}
         >
           <GearSix className="w-4 h-4 shrink-0" />
