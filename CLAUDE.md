@@ -113,7 +113,7 @@ agent-flow/
 |------|------------|------|
 | Start | `start` | 변수 초기화 |
 | User Input | `userInput` | 런타임 사용자 입력 |
-| Generate | `generate` | LLM 호출 (구 `llmInstruction`) |
+| Generate | `generate` | LLM 호출 |
 | Set Variable | `setVariable` | 변수 설정·변환 |
 | Code | `code` | JavaScript 실행 |
 | Output | `output` | 최종 출력 (directOutput) |
