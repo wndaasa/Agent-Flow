@@ -19,10 +19,8 @@ import { fetchCustomModelsForProvider } from "../registries/dynamicModels";
  */
 export default function GeneratePanel({ id, data = {} }) {
   const { onDataChange, availableMentions, onMentionUsed } = useFlowContext();
-  // 시스템 프롬프트 또는 모델 설정이 있으면 고급 옵션 기본 펼침
-  const [showAdvanced, setShowAdvanced] = useState(
-    !!(data.systemPrompt || data.provider || data.model)
-  );
+  // 고급 옵션은 기본 펼침 — 사용자가 닫으면 그 상태 유지
+  const [showAdvanced, setShowAdvanced] = useState(true);
 
   const providerOptions = useMemo(() => getProviderSelectOptions(), []);
 

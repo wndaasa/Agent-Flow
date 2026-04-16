@@ -15,7 +15,7 @@ import { USER_INPUT_TYPE_OPTIONS } from "../registries/fieldOptions";
  */
 export default function UserInputPanel({ id, data = {} }) {
   const { onDataChange, availableMentions, onMentionUsed } = useFlowContext();
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(true);
 
   const update = (partial) => onDataChange(id, partial);
 
