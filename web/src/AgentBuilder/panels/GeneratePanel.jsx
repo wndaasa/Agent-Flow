@@ -126,7 +126,7 @@ export default function GeneratePanel({ id, data = {} }) {
           field={instructionField}
           mention={instMention}
           mentions={availableMentions}
-          placeholder={"LLM에게 전달할 지시사항&#10;@블록명 또는 ${변수명} 으로 참조 가능"}
+          placeholder={"LLM에게 전달할 지시사항&#10;@블록명 으로 다른 블록의 출력을 참조"}
           grow
         />
       </div>

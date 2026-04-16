@@ -17,14 +17,9 @@ function autoLlmVarName(nodeId) {
   return `llm_${tail.slice(-AUTO_VAR_NAME_LENGTH)}`;
 }
 
-function autoCodeVarName(nodeId) {
-  const tail = (nodeId || "code").split("_").pop();
-  return `code_${tail.slice(-AUTO_VAR_NAME_LENGTH)}`;
-}
-
 function autoApiVarName(nodeId) {
   const tail = (nodeId || "api").split("_").pop();
   return `api_${tail.slice(-AUTO_VAR_NAME_LENGTH)}`;
 }
 
-module.exports = { autoVarName, autoLlmVarName, autoCodeVarName, autoApiVarName };
+module.exports = { autoVarName, autoLlmVarName, autoApiVarName };

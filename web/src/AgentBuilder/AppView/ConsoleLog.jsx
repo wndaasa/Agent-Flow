@@ -5,7 +5,6 @@ import {
   CircleNotch,
   ChatDots,
   Brain,
-  Tag,
   CaretDown,
   Sparkle,
   FileText,
@@ -14,9 +13,7 @@ import { NODE_INFO } from "../nodeConstants.jsx";
 
 const NODE_ICONS = {
   generate: Brain,
-  setVariable: Tag,
   userInput: ChatDots,
-  start: ChatDots,
   output: FileText,
   finish: FileText,
 };

@@ -49,11 +49,9 @@ agent-flow/
 │           ├── splitLlmReasoning.js
 │           └── executors/          # 노드 타입별 실행 로직
 │               ├── generate.js
-│               ├── code.js
 │               ├── api-call.js
 │               ├── web-scraping.js
-│               ├── user-input.js
-│               └── set-variable.js
+│               └── user-input.js
 └── web/
     ├── vite.config.js    # 프록시: /api → localhost:3001
     └── src/
@@ -68,8 +66,7 @@ agent-flow/
         │   ├── panels/                 # 노드별 우측 편집 패널
         │   ├── nodes/
         │   │   ├── createNodeComponent.jsx  # BaseNode 팩토리 함수
-        │   │   ├── StartNode/          # 커스텀 UI (팩토리 미사용)
-        │   │   ├── [기타 노드]/        # createNodeComponent(type) 한 줄
+        │   │   ├── [노드 타입 디렉토리]/  # createNodeComponent(type) 한 줄
         │   │   └── _wip/              # 미등록 WIP 노드 (ApiCall, WebScraping 등)
         │   ├── utils/
         │   │   └── autoVarNames.js    # 자동 변수명 생성 유틸 (서버와 동일 로직)
@@ -98,27 +95,27 @@ agent-flow/
 ### FlowExecutor (`server/lib/agentFlows/executor.js`)
 - `executeFlow()` → 포맷 자동 감지 후 분기
 - `executeGraphFlow()` → 위상정렬(BFS)로 실행 레벨 계산, 같은 레벨은 `Promise.all` 병렬 실행
-- `replaceVariables()` → `${varName}` 및 `@블록명` 패턴을 변수값으로 치환
+- `replaceVariables()` → `@블록명` 패턴만 치환 (구버전 `${varName}` 문법은 더 이상 지원하지 않음)
 - `getValueFromPath()` → dot notation + array index 경로 탐색 (`data.items[0].name` 형식)
+- Output 노드가 없을 때 폴백 우선순위: ① 레거시 finish 노드의 outputVariable → ② 마지막 실행 노드 결과 → ③ 전체 variables JSON
 
 ### 변수 시스템
-- Start 노드에서 초기화
-- `${varName}` — 변수 직접 참조
-- `@블록명` — 노드 title 기반 참조 (title이 없는 노드는 매핑 안 됨)
+- `@블록명` — 노드 title 기반 참조 (title이 없으면 NODE_INFO.label 기본값)
 - `@블록명.path.to.field` — JSON 응답의 nested 값 참조
+- 자동 변수명: User Input은 `autoVarName(nodeId)`, Generate는 `autoLlmVarName(nodeId)` (서버/웹 동일 로직)
 
 ## 노드 타입 현황
 
 | 노드 | type 문자열 | 위치 |
 |------|------------|------|
-| Start | `start` | 변수 초기화 |
 | User Input | `userInput` | 런타임 사용자 입력 |
 | Generate | `generate` | LLM 호출 |
-| Set Variable | `setVariable` | 변수 설정·변환 |
-| Code | `code` | JavaScript 실행 |
-| Output | `output` | 최종 출력 (directOutput) |
+| Output | `output` | 최종 출력 (선택 — 없으면 마지막 노드 결과를 폴백 출력) |
 | API Call | `apiCall` | HTTP 요청 |
 | Web Scraping | `webScraping` | 웹 콘텐츠 수집 |
+
+레거시 호환만 유지하는 타입: `finish` (저장된 옛 플로우 로드 시 `output`으로 자동 마이그레이션).
+삭제된 타입: `start`, `code`, `setVariable` — 로드 시 캔버스 및 엣지에서 자동 제거됨.
 
 ## 새 노드 추가 체크리스트
 
@@ -246,5 +243,5 @@ npm run build --prefix web           # 프론트 프로덕션 빌드
 - `server/node_modules`는 gitignore — `npm install` 필요
 - Prisma 스키마 변경 시 `prisma:migrate` 재실행 필수
 - `server/data/` 디렉토리 (SQLite DB 파일)는 gitignore
-- Code 노드는 서버에서 `eval()` 방식으로 실행됨 — 보안 주의
 - Legacy steps[] 포맷 플로우가 DB에 남아있을 수 있음 — 삭제 말것
+- `BlockList/`, `AddBlockMenu/`, `nodes/_wip/` 는 미등록·미사용 코드 (broken import 포함). 활성 코드에서 import 안 됨

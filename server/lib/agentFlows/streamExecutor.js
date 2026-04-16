@@ -41,7 +41,7 @@ class StreamFlowExecutor extends FlowExecutor {
   async executeStep(step) {
     const type = step.type;
 
-    // start/finish/output는 instrumentation 없이 그대로 실행
+    // start(레거시)/finish/output는 instrumentation 없이 그대로 실행
     if (type === "start" || type === "finish" || type === "output") {
       return super.executeStep(step);
     }
@@ -167,12 +167,8 @@ class StreamFlowExecutor extends FlowExecutor {
           ? data.instruction.slice(0, 40) +
               (data.instruction.length > 40 ? "…" : "")
           : "Generate";
-      case "setVariable":
-        return data.variableName ? `Set: ${data.variableName}` : "Set Variable";
       case "userInput":
         return data.prompt || "User Input";
-      case "code":
-        return data.title || "Code";
       case "output":
       case "finish":
         return "Output";

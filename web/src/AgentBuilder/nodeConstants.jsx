@@ -2,20 +2,14 @@ import React from "react";
 import {
   Brain,
   Export,
-  BracketsCurly,
   ChatDots,
-  Tag,
-  Code,
   Globe,
   Lightning,
 } from "@phosphor-icons/react";
 
 export const NODE_TYPES_MAP = {
-  start: "start",
   userInput: "userInput",
   generate: "generate",
-  setVariable: "setVariable",
-  code: "code",
   output: "output",
   apiCall: "apiCall",
   webScraping: "webScraping",
@@ -43,15 +37,6 @@ export const NODE_TYPES_MAP = {
  * 6. DRAGGABLE_NODE_TYPES 에 추가 (선택)
  */
 export const NODE_INFO = {
-  [NODE_TYPES_MAP.start]: {
-    label: "Start",
-    icon: <BracketsCurly className="w-4 h-4" />,
-    description: "플로우 시작",
-    defaultData: {},
-    color: "#6b7280", // gray
-    previewText: () => null,
-  },
-
   [NODE_TYPES_MAP.userInput]: {
     label: "User Input",
     icon: <ChatDots className="w-4 h-4" />,
@@ -80,38 +65,10 @@ export const NODE_INFO = {
     previewText: (data) => data.instruction?.trim() || null,
   },
 
-  [NODE_TYPES_MAP.setVariable]: {
-    label: "Set Variable",
-    icon: <Tag className="w-4 h-4" />,
-    description: "변수 저장·변환",
-    defaultData: {
-      variableName: "",
-      value: "",
-    },
-    color: "#f59e0b", // amber
-    previewText: (data) =>
-      data.variableName
-        ? `${data.variableName} = ${data.value || "..."}`
-        : null,
-  },
-
-  [NODE_TYPES_MAP.code]: {
-    label: "Code",
-    icon: <Code className="w-4 h-4" />,
-    description: "JavaScript 코드로 데이터 변환",
-    defaultData: {
-      title: "",
-      code: "",
-      resultVariable: "",
-    },
-    color: "#ef4444", // red
-    previewText: (data) => data.code?.trim()?.slice(0, 60) || null,
-  },
-
   [NODE_TYPES_MAP.output]: {
     label: "Output",
     icon: <Export className="w-4 h-4" />,
-    description: "최종 출력 템플릿",
+    description: "최종 출력 템플릿 (선택)",
     defaultData: {
       template: "",
     },
@@ -152,13 +109,13 @@ export const NODE_INFO = {
 };
 
 /**
- * TopToolbar 에서 버튼으로 표시할 노드 타입 목록 (start/output 제외)
+ * TopToolbar 에서 버튼으로 표시할 노드 타입 목록
  * 순서가 툴바 버튼 순서에 반영됨
  */
 export const DRAGGABLE_NODE_TYPES = [
   NODE_TYPES_MAP.userInput,
   NODE_TYPES_MAP.generate,
-  NODE_TYPES_MAP.setVariable,
   NODE_TYPES_MAP.apiCall,
   NODE_TYPES_MAP.webScraping,
+  NODE_TYPES_MAP.output,
 ];
