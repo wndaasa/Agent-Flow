@@ -7,21 +7,15 @@
  * 3. nodeConstants.jsx 의 NODE_INFO 에 메타데이터 추가
  * 4. index.jsx 의 NODE_TYPES 에 등록
  */
-import StartPanel from "../panels/StartPanel";
 import UserInputPanel from "../panels/UserInputPanel";
 import GeneratePanel from "../panels/GeneratePanel";
-import SetVariablePanel from "../panels/SetVariablePanel";
-import CodePanel from "../panels/CodePanel";
 import OutputPanel from "../panels/OutputPanel";
 import ApiCallPanel from "../panels/ApiCallPanel";
 import WebScrapingPanel from "../panels/WebScrapingPanel";
 
 export const PANEL_REGISTRY = {
-  start: StartPanel,
   userInput: UserInputPanel,
   generate: GeneratePanel,
-  setVariable: SetVariablePanel,
-  code: CodePanel,
   output: OutputPanel,
   finish: OutputPanel, // 하위 호환 (구버전 플로우)
   apiCall: ApiCallPanel,

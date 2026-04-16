@@ -1,5 +1,5 @@
 const { FLOW_TYPES } = require("./flowTypes");
-const { autoVarName, autoLlmVarName, autoCodeVarName, autoApiVarName } = require("./autoVarNames");
+const { autoVarName, autoLlmVarName, autoApiVarName } = require("./autoVarNames");
 
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -8,8 +8,6 @@ const executeApiCall = require("./executors/api-call");
 const executeGenerate = require("./executors/generate");
 const executeWebScraping = require("./executors/web-scraping");
 const executeUserInput = require("./executors/user-input");
-const executeSetVariable = require("./executors/set-variable");
-const executeCode = require("./executors/code");
 const { Telemetry } = require("../../models/telemetry");
 const { safeJsonParse } = require("../http");
 
@@ -110,16 +108,13 @@ class FlowExecutor {
   }
 
   /**
-   * 설정 객체 내 ${varName} 패턴을 변수 값으로 치환
+   * 설정 객체 내 @블록명(.path) 패턴을 변수 값으로 치환
+   * (구버전 ${varName} 문법은 더 이상 지원하지 않음)
    */
   replaceVariables(config) {
     const deepReplace = (obj) => {
       if (typeof obj === "string") {
-        // ${변수명} 치환
-        let result = obj.replace(/\${([^}]+)}/g, (match, varName) => {
-          const value = this.getValueFromPath(this.variables, varName);
-          return value !== undefined ? value : match;
-        });
+        let result = obj;
         // @블록명 또는 @블록명.속성.속성 치환 (긴 레이블 우선 매칭)
         if (this._labelToVar) {
           const labels = Object.keys(this._labelToVar).sort(
@@ -181,16 +176,9 @@ class FlowExecutor {
 
     const type = step.type;
     switch (type) {
-      case FLOW_TYPES.START.type:
-        if (config.variables) {
-          config.variables.forEach((v) => {
-            if (v.name && !this.variables[v.name]) {
-              this.variables[v.name] = v.value || "";
-            }
-          });
-        }
-        result = this.variables;
-        break;
+      // 레거시 플로우 호환: start 노드는 무시하고 통과
+      case "start":
+        return undefined;
       case FLOW_TYPES.API_CALL.type:
         result = await executeApiCall(config, context);
         break;
@@ -206,15 +194,9 @@ class FlowExecutor {
       case FLOW_TYPES.USER_INPUT.type:
         result = await executeUserInput(config, context);
         break;
-      case FLOW_TYPES.SET_VARIABLE.type:
-        result = await executeSetVariable(config, context);
-        break;
-      case FLOW_TYPES.CODE.type:
-        result = await executeCode(config, context);
-        break;
       case "output":
       case "finish": // 하위 호환
-        // template 안의 @멘션·${변수} 는 replaceVariables로 이미 치환됨
+        // template 안의 @멘션은 replaceVariables로 이미 치환됨
         result = config.template || this.variables[config.outputVariable] || "";
         return { directOutput: true, result };
       default:
@@ -224,9 +206,6 @@ class FlowExecutor {
     // 결과 변수 저장: resultVariable 미지정 시 노드 ID 기반 자동 변수명으로 저장
     if (type === FLOW_TYPES.GENERATE.type) {
       const varName = config.resultVariable || autoLlmVarName(step.id);
-      this.variables[varName] = result;
-    } else if (type === FLOW_TYPES.CODE.type) {
-      const varName = config.resultVariable || autoCodeVarName(step.id);
       this.variables[varName] = result;
     } else if (type === FLOW_TYPES.API_CALL.type) {
       const varName = config.resultVariable || autoApiVarName(step.id);
@@ -303,8 +282,8 @@ class FlowExecutor {
     const DEFAULT_NODE_LABELS = {
       userInput: "User Input",
       generate: "Generate",
-      setVariable: "Set Variable",
-      code: "Code",
+      apiCall: "API Call",
+      webScraping: "Web Scraping",
     };
 
     // @블록명 참조를 위한 레이블 → 변수명 매핑 구성
@@ -318,9 +297,6 @@ class FlowExecutor {
       } else if (node.type === "generate") {
         this._labelToVar[label] =
           node.data?.resultVariable || autoLlmVarName(node.id);
-      } else if (node.type === "code") {
-        this._labelToVar[label] =
-          node.data?.resultVariable || autoCodeVarName(node.id);
       } else if (node.type === "apiCall") {
         this._labelToVar[label] =
           node.data?.resultVariable || autoApiVarName(node.id);
@@ -329,13 +305,7 @@ class FlowExecutor {
       }
     }
 
-    // start 노드에서 기본 변수 초기화
-    const startNode = nodes.find((n) => n.type === "start");
-    const startVars = (startNode?.data?.variables || []).reduce(
-      (acc, v) => ({ ...acc, [v.name]: v.value || "" }),
-      {}
-    );
-    this.variables = { ...startVars, ...initialVariables };
+    this.variables = { ...initialVariables };
 
     const levels = this.buildExecutionLevels(nodes, edges);
     console.log(
@@ -352,10 +322,11 @@ class FlowExecutor {
 
     const results = [];
     let directOutputResult = null;
+    let lastNodeResult; // Output 노드가 없을 때 폴백용
 
     for (let levelIdx = 0; levelIdx < levels.length; levelIdx++) {
       const level = levels[levelIdx];
-      // output/finish 노드는 일반 레벨에서 실행 (directOutput 반환)
+      // 레거시 start 노드는 실행에서 제외
       const executableNodes = level.filter((n) => n.type !== "start");
       if (executableNodes.length === 0) continue;
 
@@ -389,6 +360,9 @@ class FlowExecutor {
           if (res.value?.directOutput) {
             console.log(`[FlowExecutor]   ◆ ${nodeId} directOutput 감지`);
             directOutputResult = res.value.result;
+          } else if (res.value !== undefined) {
+            // Output 노드가 없을 경우를 대비해 마지막 일반 노드 결과 보존
+            lastNodeResult = res.value;
           }
           results.push({ success: true, result: res.value });
         }
@@ -410,12 +384,22 @@ class FlowExecutor {
       }
     }
 
-    // Finish 노드의 outputVariable이 지정된 경우 해당 변수 값을 최종 출력으로 사용
+    // Output 노드가 없을 경우 폴백 우선순위:
+    //   1) Finish 노드의 outputVariable 변수 값 (구버전 호환)
+    //   2) 마지막으로 실행된 일반 노드의 결과
+    //   3) 전체 변수 객체 (디버깅용)
     if (!directOutputResult) {
       const finishNode = nodes.find((n) => n.type === "finish");
       const outputVar = finishNode?.data?.outputVariable;
       if (outputVar && this.variables[outputVar] !== undefined) {
         directOutputResult = this.variables[outputVar];
+      } else if (lastNodeResult !== undefined) {
+        directOutputResult =
+          typeof lastNodeResult === "object"
+            ? JSON.stringify(lastNodeResult)
+            : lastNodeResult;
+      } else if (Object.keys(this.variables).length > 0) {
+        directOutputResult = JSON.stringify(this.variables, null, 2);
       }
     }
 

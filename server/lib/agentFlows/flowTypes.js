@@ -17,27 +17,6 @@ const FLOW_TYPES = {
       },
     },
   },
-  SET_VARIABLE: {
-    type: "setVariable",
-    description: "Set or transform a variable value",
-    parameters: {
-      variableName: { type: "string", description: "Variable name to assign" },
-      value: {
-        type: "string",
-        description: "Value to assign (supports ${varName} templates)",
-      },
-    },
-  },
-  START: {
-    type: "start",
-    description: "Initialize flow variables",
-    parameters: {
-      variables: {
-        type: "array",
-        description: "List of variables to initialize",
-      },
-    },
-  },
   API_CALL: {
     type: "apiCall",
     description: "Make an HTTP request to an API endpoint",
@@ -120,20 +99,6 @@ const FLOW_TYPES = {
         type: "boolean",
         description:
           "Whether to return the scraped content directly to the user without LLM processing",
-      },
-    },
-  },
-  CODE: {
-    type: "code",
-    description: "Execute JavaScript code to transform data",
-    parameters: {
-      code: {
-        type: "string",
-        description: "JavaScript code to execute. Use `variables` object to read/write flow variables. Return a value to store as result.",
-      },
-      resultVariable: {
-        type: "string",
-        description: "Variable to store the execution result",
       },
     },
   },

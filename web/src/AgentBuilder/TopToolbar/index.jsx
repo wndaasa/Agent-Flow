@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { CaretDown } from "@phosphor-icons/react";
 import GenerateDropdown from "./GenerateDropdown";
-import AssetsDropdown from "./AssetsDropdown";
 import { TOOLBAR_ITEMS } from "./toolbarConfig";
 
 /**
@@ -103,12 +102,6 @@ export default function TopToolbar({ onAddNode, onAction }) {
 
               {isOpen && item.id === "generate" && (
                 <GenerateDropdown
-                  onSelect={handleDropdownSelect}
-                  onClose={closeDropdown}
-                />
-              )}
-              {isOpen && item.id === "addAssets" && (
-                <AssetsDropdown
                   onSelect={handleDropdownSelect}
                   onClose={closeDropdown}
                 />

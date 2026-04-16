@@ -34,7 +34,7 @@ export default function MentionDropdown({ items, selectedIndex, onSelect }) {
                   (.속성)
                 </span>
               )}
-              <span className="ml-auto text-[10px] text-theme-text-secondary/50 font-mono">{`\${${m.varName}}`}</span>
+              <span className="ml-auto text-[10px] text-theme-text-secondary/50 font-mono">@{m.label}</span>
             </>
           )}
         </button>
