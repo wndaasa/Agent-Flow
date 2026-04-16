@@ -183,14 +183,14 @@ chore: CLAUDE.md git 관리 지침 추가
 
 ### 릴리즈 태그
 - Semantic Versioning: `v주.부.수`
-- 현재 버전: `v0.4.1`
+- 현재 버전: `v0.4.2`
 - main 머지 시: `git tag v0.x.x -m "설명"` + `git push origin main && git push origin v0.x.x`
 - 버전 올릴 때 `web/src/pages/Settings/index.jsx`의 버전 표기도 함께 업데이트할 것
 
 ## 환경 변수 (`server/.env`)
 
 ```env
-DATABASE_URL="file:./data/agent-flow.db"
+DATABASE_URL="file:../data/agent-flow.db"   # Prisma SQLite 경로는 schema.prisma 기준 → 실제 위치는 server/data/agent-flow.db
 PORT=3001
 LLM_PROVIDER=openai          # openai | anthropic | ollama
 OPEN_AI_KEY=sk-...
