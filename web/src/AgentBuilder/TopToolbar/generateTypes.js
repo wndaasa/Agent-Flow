@@ -1,23 +1,20 @@
 /**
- * generateTypes.js — Generate 드롭다운 항목 레지스트리
+ * generateTypes.js — Generate 노드의 LLM 프리셋 레지스트리
  *
- * 구조: 그룹(GENERATE_GROUPS) → 항목(items)
+ * 우측 GeneratePanel 의 Provider / Model 셀렉트 옵션을 만드는 단일 소스다.
+ * (이전에는 TopToolbar 의 Generate 드롭다운에서도 사용했지만,
+ *  Generate 가 일반 노드 버튼으로 단순화되면서 패널 전용이 됨)
  *
- * ── 새 모델/타입 추가 방법 ──────────────────────────────────────
- * 1. 기존 그룹에 item 추가  (같은 계열 모델)
- *    또는
- *    새 그룹 객체를 GENERATE_GROUPS 배열에 추가  (새 카테고리: 이미지, 오디오 등)
- * 2. item.nodeType 이 새로운 노드 타입이면:
- *    - nodeConstants.jsx 에 NODE_INFO 항목 추가
- *    - RightPanel/panelRegistry.js 에 Panel 컴포넌트 등록
- *    - index.jsx 의 NODE_TYPES 에 등록
+ * ── 새 모델 추가 방법 ──────────────────────────────────────────
+ * - 같은 계열: 해당 그룹의 items 에 항목 추가
+ * - 새 프로바이더: STATIC_GROUPS 또는 DYNAMIC_PROVIDERS 에 그룹 추가
  *
  * ── item 필드 ──────────────────────────────────────────────────
  * id          : 고유 식별자 (string)
- * label       : 표시 이름 (string)
+ * label       : 표시 이름 (string) — 모델 셀렉트 옵션 라벨
  * description : 부연 설명 (string)
- * nodeType    : 추가할 ReactFlow 노드 타입 (string) — nodeConstants 키
- * defaultData : 노드 생성 시 초기 data (object)
+ * nodeType    : 항상 "generate" (역사적 잔재 — 추후 정리 가능)
+ * defaultData : { provider, model } — 모델 옵션 추출에 사용
  */
 
 /**

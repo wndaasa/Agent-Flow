@@ -2,9 +2,6 @@
  * 플로우 실행 관련 상수
  */
 
-/** Code 노드 최대 실행 시간 (ms) */
-const CODE_EXECUTION_TIMEOUT = 10_000;
-
 /** Web Scraping 결과 최대 텍스트 길이 (chars) */
 const MAX_SCRAPED_TEXT_LENGTH = 500_000;
 
@@ -15,7 +12,6 @@ const MAX_FILE_SIZE = 25 * 1024 * 1024;
 const SESSION_CLEANUP_TIMEOUT = 5 * 60 * 1000;
 
 module.exports = {
-  CODE_EXECUTION_TIMEOUT,
   MAX_SCRAPED_TEXT_LENGTH,
   MAX_FILE_SIZE,
   SESSION_CLEANUP_TIMEOUT,

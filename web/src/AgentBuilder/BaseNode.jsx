@@ -40,8 +40,6 @@ export default function BaseNode({
   const rootRef                   = useRef(null);
 
   const info      = NODE_INFO[type] || { label: type, icon: null, color: "#6b7280" };
-  const isStart   = type === "start";
-  const isFinish  = type === "finish" || type === "output";
   const isOutput  = type === "output" || type === "finish";
 
   const displayLabel = data.title?.trim() || info.label;
@@ -73,7 +71,7 @@ export default function BaseNode({
 
   /* ── 인라인 제목 편집 ──────────────────────────────────── */
   const startEdit = (e) => {
-    if (isStart || isOutput) return;
+    if (isOutput) return;
     e.stopPropagation();
     setEditValue(data.title?.trim() || "");
     setEditing(true);
@@ -106,14 +104,12 @@ export default function BaseNode({
         }
       `}
     >
-      {/* 상단 연결 Handle (Start 노드 제외) */}
-      {!isStart && (
-        <Handle
-          type="target"
-          position={Position.Top}
-          className="!w-3 !h-3 !bg-primary-button !border-2 !border-theme-bg-primary"
-        />
-      )}
+      {/* 상단 연결 Handle */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!w-3 !h-3 !bg-primary-button !border-2 !border-theme-bg-primary"
+      />
 
       {/* ── 헤더 ─────────────────────────────────────────── */}
       <div
@@ -146,17 +142,17 @@ export default function BaseNode({
           <span
             className={`
               flex-1 text-xs font-semibold text-theme-text-primary truncate
-              ${!isStart && !isOutput ? "cursor-text" : ""}
+              ${!isOutput ? "cursor-text" : ""}
             `}
-            onDoubleClick={!isStart && !isOutput ? startEdit : undefined}
-            title={!isStart && !isOutput ? "더블클릭으로 이름 편집" : undefined}
+            onDoubleClick={!isOutput ? startEdit : undefined}
+            title={!isOutput ? "더블클릭으로 이름 편집" : undefined}
           >
             {displayLabel}
           </span>
         )}
 
-        {/* 삭제 버튼 (Start/Output 제외) */}
-        {deletable && !isStart && !isOutput && (
+        {/* 삭제 버튼 */}
+        {deletable && (
           <button
             onClick={(e) => { e.stopPropagation(); onDeleteNode(id); }}
             className="text-theme-text-secondary hover:text-red-400 transition-colors shrink-0"

@@ -25,18 +25,15 @@ import paths from "@/utils/paths";
 import { FlowContext } from "./FlowContext";
 import { NODE_INFO } from "./nodeConstants.jsx";
 import { useLocalField } from "./hooks/useLocalField";
-import { autoVarName, autoLlmVarName, autoCodeVarName } from "./utils/autoVarNames";
+import { autoVarName, autoLlmVarName } from "./utils/autoVarNames";
 
 import HeaderMenu   from "./HeaderMenu";
 import TopToolbar   from "./TopToolbar";
 import { NODE_TYPES_WITH_EDGE_MENTION_INSERT } from "./registries/flowConstants";
 import RightPanel   from "./RightPanel";
 
-import StartNode          from "./nodes/StartNode";
 import UserInputNode      from "./nodes/UserInputNode";
-import GenerateNode from "./nodes/GenerateNode";
-import SetVariableNode    from "./nodes/SetVariableNode";
-import CodeNode           from "./nodes/CodeNode";
+import GenerateNode       from "./nodes/GenerateNode";
 import OutputNode         from "./nodes/OutputNode";
 import ApiCallNode        from "./nodes/ApiCallNode";
 import WebScrapingNode    from "./nodes/WebScrapingNode";
@@ -92,9 +89,6 @@ function isInvalidConnection(params, nodeMap) {
   if (!srcNode || !tgtNode) return true;
   // output/finish는 터미널 노드라 source가 될 수 없다.
   if (["output", "finish"].includes(srcNode.type)) return true;
-  // start는 시작 노드라 target이 될 수 없다.
-  if (srcNode.type === "start" && tgtNode.type === "start") return true;
-  if (tgtNode.type === "start") return true;
   // 자기 자신으로의 연결은 금지
   if (srcNode.id === tgtNode.id) return true;
   return false;
@@ -109,11 +103,8 @@ function isInvalidConnection(params, nodeMap) {
  * (nodeConstants.jsx 의 NODE_INFO 및 RightPanel/panelRegistry.js 도 함께 업데이트)
  */
 const NODE_TYPES = {
-  start:          StartNode,
   userInput:      UserInputNode,
-  generate: GenerateNode,
-  setVariable:    SetVariableNode,
-  code:           CodeNode,
+  generate:       GenerateNode,
   output:         OutputNode,
   finish:         OutputNode, // 구버전 저장 플로우 하위 호환
   apiCall:        ApiCallNode,
@@ -154,54 +145,31 @@ function normalizeNodesForEditor(rawNodes) {
 const MENTION_FIELDS_BY_TYPE = {
   userInput: ["prompt"],
   generate: ["instruction", "systemPrompt"],
-  setVariable: ["value"],
-  code: ["code"],
   output: ["template"],
   finish: ["template"],
 };
 
-const INITIAL_NODES = [
-  {
-    id: "start",
-    type: "start",
-    position: { x: 250, y: 80 },
-    data: {},
-    deletable: false,
-  },
-  {
-    id: "output",
-    type: "output",
-    position: { x: 250, y: 350 },
-    data: { template: "" },
-    deletable: false,
-    width: OUTPUT_NODE_WIDTH,
-  },
-];
-
-const INITIAL_EDGES = [
-  {
-    id: "e-start-output",
-    source: "start",
-    target: "output",
-    type: "smoothstep",
-    style: EDGE_STYLE,
-  },
-];
+const INITIAL_NODES = [];
+const INITIAL_EDGES = [];
 
 /* ── 레거시 플로우 마이그레이션 ────────────────────────────── */
+/** 이미 제거된 노드 타입 (start/code/setVariable) — 로드 시 캔버스에서 제외 */
+const REMOVED_NODE_TYPES = new Set(["start", "code", "setVariable"]);
+
 function convertLegacySteps(steps) {
   const xCenter = 250;
   const yGap    = 200;
-  const newNodes = steps.map((step, i) => {
+  // start/code/setVariable은 더 이상 지원하지 않으므로 변환 단계에서 제외
+  const visible = steps.filter((s) => !REMOVED_NODE_TYPES.has(s.type));
+  const newNodes = visible.map((step, i) => {
     const isOut = step.type === "finish" || step.type === "output";
     const type = step.type === "finish" ? "output" : step.type;
     const node = {
-      id: i === 0 ? "start" : (isOut ? "output" : `node_${i}`),
+      id: isOut ? "output" : `node_${i}`,
       type,
       position: { x: xCenter, y: 80 + i * yGap },
       data: step.config || {},
-      deletable:
-        step.type !== "start" && step.type !== "finish" && step.type !== "output",
+      deletable: true,
     };
     if (type === "output") node.width = OUTPUT_NODE_WIDTH;
     return node;
@@ -295,7 +263,7 @@ export default function AgentBuilder() {
 
       if (e.key === "c") {
         const selected = nodes.filter(
-          (n) => n.selected && n.type !== "start" && n.type !== "finish" && n.type !== "output"
+          (n) => n.selected && n.type !== "finish" && n.type !== "output"
         );
         if (selected.length > 0) setClipboard(selected);
       }
@@ -342,19 +310,25 @@ export default function AgentBuilder() {
 
       const cfg = flow.config;
       if (Array.isArray(cfg.nodes) && Array.isArray(cfg.edges)) {
-        // 구버전 finish 노드 → output 마이그레이션
-        const migratedNodes = cfg.nodes.map((n) =>
-          n.type === "finish"
-            ? { ...n, type: "output", data: { template: "", ...n.data } }
-            : n
-        );
+        // 구버전 finish 노드 → output 마이그레이션 + start/code/setVariable 제거
+        const removedNodeIds = new Set();
+        const migratedNodes = cfg.nodes.flatMap((n) => {
+          if (REMOVED_NODE_TYPES.has(n.type)) {
+            removedNodeIds.add(n.id);
+            return [];
+          }
+          if (n.type === "finish") {
+            return [{ ...n, type: "output", data: { template: "", ...n.data } }];
+          }
+          return [n];
+        });
         setNodes(normalizeNodesForEditor(migratedNodes));
 
-        // 무효 엣지 제거: source handle이 없는 노드(start, output/finish)에서 나가는 엣지,
-        // target handle이 없는 노드에서 들어오는 엣지, 존재하지 않는 노드 참조 등
+        // 무효 엣지 제거: 제거된 노드를 참조하거나, source handle이 없는 노드(output/finish)에서 나가는 엣지 등
         const nodeMap = new Map(migratedNodes.map((n) => [n.id, n]));
         const noSourceTypes = new Set(["output", "finish"]); // source handle 없는 타입
         const validEdges = cfg.edges.filter((e) => {
+          if (removedNodeIds.has(e.source) || removedNodeIds.has(e.target)) return false;
           const srcNode = nodeMap.get(e.source);
           const tgtNode = nodeMap.get(e.target);
           if (!srcNode || !tgtNode) return false; // 존재하지 않는 노드
@@ -396,7 +370,6 @@ export default function AgentBuilder() {
         const tgtNode = nodeMap.get(e.target);
         if (!srcNode || !tgtNode) return false;
         if (["output", "finish"].includes(srcNode.type)) return false;
-        if (tgtNode.type === "start") return false;
         return true;
       });
       const { edges: sanitizedEdges } = removeCyclicEdges(validEdges);
@@ -584,36 +557,24 @@ export default function AgentBuilder() {
   const availableVariables = useMemo(() => {
     const names = new Set();
     nodes.forEach((n) => {
-      if (n.type === "userInput")      names.add(autoVarName(n.id));
-      if (n.data?.resultVariable)      names.add(n.data.resultVariable);
-      if (n.data?.variableName)        names.add(n.data.variableName);
+      if (n.type === "userInput") names.add(autoVarName(n.id));
+      if (n.type === "generate")  names.add(autoLlmVarName(n.id));
     });
     return [...names].filter(Boolean).map((name) => ({ name }));
   }, [nodes]);
 
-  /** @블록명 자동완성·하이라이트용 (Start/Output 포함 — HighlightTextarea 정규식에 필요) */
+  /** @블록명 자동완성·하이라이트용 (Output 포함 — HighlightTextarea 정규식에 필요) */
   const availableMentions = useMemo(() => {
     return nodes
       .filter((n) => n.type !== "finish")
       .flatMap((n) => {
         const label = n.data?.title?.trim() || NODE_INFO[n.type]?.label || n.type;
-        if (n.type === "start")
-          return [{ label, varName: "__start__", nodeId: n.id }];
         if (n.type === "output")
           return [{ label, varName: "output", nodeId: n.id }];
         if (n.type === "userInput")
           return [{ label, varName: autoVarName(n.id), nodeId: n.id }];
         if (n.type === "generate")
           return [{ label, varName: n.data?.resultVariable || autoLlmVarName(n.id), nodeId: n.id }];
-        if (n.type === "code") {
-          // Code 노드: outputKeys가 지정되어 있으면 subProps로 전달
-          const subProps = Array.isArray(n.data?.outputKeys) && n.data.outputKeys.length > 0
-            ? n.data.outputKeys.filter(Boolean)
-            : [];
-          return [{ label, varName: n.data?.resultVariable || autoCodeVarName(n.id), nodeId: n.id, subProps }];
-        }
-        if (n.data?.variableName)
-          return [{ label, varName: n.data.variableName, nodeId: n.id }];
         return [];
       });
   }, [nodes]);
@@ -702,7 +663,7 @@ export default function AgentBuilder() {
       }
       setEdges((eds) => addEdge({ ...params, type: "smoothstep", style: EDGE_STYLE }, eds));
 
-      // 연결 시 target이 LLM/Code 노드이면 source의 @mention을 자동 삽입
+      // 연결 시 target이 LLM 노드이면 source의 @mention을 자동 삽입
       const targetNode = nodeMap.get(params.target);
       const sourceNode = nodeMap.get(params.source);
       if (targetNode && sourceNode) {
@@ -711,14 +672,13 @@ export default function AgentBuilder() {
         );
         const sourceLabel = sourceNode.data?.title?.trim() || NODE_INFO[sourceNode.type]?.label;
         if (acceptsMention && sourceLabel) {
-          const fieldKey = targetNode.type === "generate" ? "instruction" : "code";
-          const currentText = targetNode.data?.[fieldKey] || "";
+          const currentText = targetNode.data?.instruction || "";
           const mentionTag = `@${sourceLabel}`;
           // 이미 포함되어 있으면 중복 삽입하지 않음
           if (!currentText.includes(mentionTag)) {
             const separator = currentText && !currentText.endsWith("\n") ? "\n" : "";
             onDataChange(params.target, {
-              [fieldKey]: currentText + separator + mentionTag,
+              instruction: currentText + separator + mentionTag,
             });
           }
         }
