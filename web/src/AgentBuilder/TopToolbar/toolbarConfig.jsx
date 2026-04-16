@@ -23,8 +23,9 @@ export const TOOLBAR_ITEMS = [
     id: "generate",
     label: "Generate",
     icon: <Sparkle className="w-4 h-4" weight="fill" />,
-    type: "dropdown",
-    draggable: false,
+    type: "node",
+    nodeType: "generate",
+    draggable: true,
   },
   { type: "divider", id: "d2" },
   {
